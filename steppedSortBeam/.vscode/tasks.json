@@ -1,0 +1,12 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "ActivateCondaEnvironment",
+        "type": "shell",
+        "command": "bash",
+        "args": ["-c", "source /Users/shanyn/miniconda/bin/activate my_root_env && conda activate my_root_env"]
+      }
+    ]
+  }
+  
