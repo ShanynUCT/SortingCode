@@ -105,7 +105,7 @@ std::vector<Double_t> alignedEnergySlow(1);
 
  std::vector<TH1D*> slowfasttimediff_hists(NumDetectors);
 std::vector<TH1D*> timeOffsetCorrectedHists(NumDetectors);
-std::vector<TH1D*> timeOffsetCorrectedHistsfirst(NumDetectors);
+std::vector <TH1D*> timefastslowratio_hists(NumDetectors);
 std::vector<TH2D*> slowfasttimediff_energy_hists(NumDetectors);
 std::vector<TH2D*> energy_slowfasttimediff_hists(NumDetectors); 
 std::vector<TH2D*> slowfasttimediff_energy_hists1(1);
@@ -129,9 +129,12 @@ std::vector<TH2D*> energy_slowfasttimediff_hists9(1);
 std::vector<TH2D*> slowfasttimediff_energy_hists10(1);
 std::vector<TH2D*> energy_slowfasttimediff_hists10(1);
 std::vector<TH2D*> slowfasttimediff_energy_hists11(1);
+std::vector<TH2D*> slowfasttimediff_energy_hists6_2(1);
+std::vector<TH2D*> energy_slowfasttimediff_hists6_2(1);
+std::vector<TH2D*> slowfasttimediff_energy_hists6_3(1);
+std::vector<TH2D*> energy_slowfasttimediff_hists6_3(1);
 std::vector<TH2D*> energy_slowfasttimediff_hists11(1);
-std::vector<TH2D*> timeEnergyOffsetCorrectedHists(1);
-std::vector<TH2D*> timeEnergyOffsetCorrectedHistsfirst(1);
+std::vector<TH2D*> timeEnergyOffsetCorrectedHists(NumDetectors);
 
 std::vector<TH2D*> slowfasttimediff_energy_hists_again(1);
 std::vector<TH2D*> energy_slowfasttimediff_hists_again(1);
@@ -147,9 +150,13 @@ std::map<std::pair<int, double>, double> precomputedValues1;
 std::map<std::pair<int, double>, double> precomputedValues2;
 std::map<std::pair<int, double>, double> precomputedValues3;
 std::map<std::pair<int, double>, double> precomputedValues4;
-std::map<std::pair<int, double>, double> precomputedValues5;
+std::map<std::pair<int, double>, double> precomputedValues5_1;
+std::map<std::pair<int, double>, double> precomputedValues5_2;
 std::map<std::pair<int, double>, double> precomputedValues6;
-std::map<std::pair<int, double>, double> precomputedValues7;
+std::map<std::pair<int, double>, double> precomputedValues6_2;
+std::map<std::pair<int, double>, double> precomputedValues6_3;
+std::map<std::pair<int, double>, double> precomputedValues7_1;
+std::map<std::pair<int, double>, double> precomputedValues7_2;
 std::map<std::pair<int, double>, double> precomputedValues8;
 std::map<std::pair<int, double>, double> precomputedValues9;
 std::map<std::pair<int, double>, double> precomputedValues10;
@@ -169,14 +176,20 @@ TF1* banana3fit[1];
 TF1* banana4(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists4, TH2D* energy_slowfasttimediff_hists4, std::string dirPathplots);
 TF1* banana4fit[1];
 
-TF1* banana5(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists5, TH2D* energy_slowfasttimediff_hists5, std::string dirPathplots);
-TF1* banana5fit[1];
+TF1* banana5_1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists5, TH2D* energy_slowfasttimediff_hists5, std::string dirPathplots);
+TF1* banana5_1fit[1];
+
+TF1* banana5_2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists5, TH2D* energy_slowfasttimediff_hists5, std::string dirPathplots);
+TF1* banana5_2fit[1];
 
 TF1* banana6(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists6, TH2D* energy_slowfasttimediff_hists6, std::string dirPathplots);
 TF1* banana6fit[1];
 
-TF1* banana7(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists7, TH2D* energy_slowfasttimediff_hists7, std::string dirPathplots);
-TF1* banana7fit[1];
+TF1* banana7_1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists7, TH2D* energy_slowfasttimediff_hists7, std::string dirPathplots);
+TF1* banana7_1fit[1];
+
+TF1* banana7_2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists7, TH2D* energy_slowfasttimediff_hists7, std::string dirPathplots);
+TF1* banana7_2fit[1];
 
 TF1* banana8(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists8, TH2D* energy_slowfasttimediff_hists8, std::string dirPathplots);
 TF1* banana8fit[1];
@@ -190,6 +203,11 @@ TF1* banana10fit[1];
 TF1* banana11(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists11, TH2D* energy_slowfasttimediff_hists11, std::string dirPathplots);
 TF1* banana11fit[1];
 
+TF1* banana6_2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists6_2, TH2D* energy_slowfasttimediff_hists6_2, std::string dirPathplots);
+TF1* banana6_2fit[1];
+
+TF1* banana6_3(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists6_3, TH2D* energy_slowfasttimediff_hists6_3, std::string dirPathplots);
+TF1* banana6_3fit[1];
 
 TF1* bananafinal(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists_again, TH2D* energy_slowfasttimediff_hists_again, std::string dirPathplots);
 TF1* bananafinalfit[1];
@@ -198,7 +216,7 @@ TF1* bananafinalfit[1];
 // banana1 good fit
 TF1* banana1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists1, TH2D* energy_slowfasttimediff_hists1, std::string dirPathplots)
 {
-    std::cout <<"\nFitting banana1 (< 32 ns  offset) for CFD - detector L \n" << i << std::endl;
+    std::cout <<"\nFitting banana1 (< 40 ns  offset) for CFD - detector L \n" << i << std::endl;
 
     int yBins = slowfasttimediff_energy_hists1->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists1->GetXaxis()->GetNbins();
@@ -241,7 +259,7 @@ TF1* banana1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -271,13 +289,13 @@ TF1* banana1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr1 -> SetMarkerStyle(20);
     gr1 -> SetMarkerSize(0.8);
     gr1 -> SetMarkerColor(kBlue);
-    gr1->GetYaxis()->SetRangeUser(20, 32);
-    gr1->GetXaxis()->SetRangeUser(370, 1650);
-    TF1* fit1 = new TF1("fit1", "expo(0)+pol2(2)", 370, 1650);
+    gr1->GetYaxis()->SetRangeUser(26, 46);
+    gr1->GetXaxis()->SetRangeUser(400, 2000);
+    TF1* fit1 = new TF1("fit1", "expo(0)+pol2(2)", 450, 2000);
     gr1->Draw("AL*");
     gr1->Fit("fit1", ""); // Perform the fit using the initial parameters
+    fit1 -> SetParameters( 5.17847, -0.00871973, 30.7512, 0.0054537, -2.12777e-06);
     fit1->Draw("same");
-    fit1 -> SetParameters(20, 0.0129486, -5.26759e-06, 4.70433, -0.00690354);
     //gr1->GetXaxis()->SetRangeUser(0, 2000);
     cb -> SaveAs(Form("%s/R%s_banana1Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -295,12 +313,12 @@ TF1* banana1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
 
 TF1* banana2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists2, TH2D* energy_slowfasttimediff_hists2, std::string dirPathplots)
 {
-    std::cout <<"Fitting banana2 (>32<50 ns offset) for CFD - detector L \n" << i << std::endl;
+    std::cout <<"Fitting banana2 (>40<56 ns offset) for CFD - detector L \n" << i << std::endl;
 
     int yBins = slowfasttimediff_energy_hists2->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists2->GetXaxis()->GetNbins();
 
-    int slicewidth = 50, bin = 1, binmax = 1;
+    int slicewidth = 20, bin = 1, binmax = 1;
 
     std::vector<Double_t> slice_charge(yBins);
     std::vector<Double_t> slice_charge_err(yBins);
@@ -338,7 +356,7 @@ TF1* banana2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -367,12 +385,12 @@ TF1* banana2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr2 -> SetMarkerStyle(20);
     gr2 -> SetMarkerSize(0.8);
     gr2 -> SetMarkerColor(kBlue);
-    gr2->GetYaxis()->SetRangeUser(32, 50);
-    gr2->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit2 = new TF1("fit2", "exp([p0]+[p1]*x)+exp([p2]+[p3]*x)", 180, 2000); 
+    gr2->GetYaxis()->SetRangeUser(42, 54);
+    gr2->GetXaxis()->SetRangeUser(212, 2000);
+    TF1* fit2 = new TF1("fit2", "expo(0)+pol2(2)", 200, 1600); 
     gr2->Draw("AL*");
     gr2->Fit("fit2", "");
-    fit2->SetParameters(3.69478, 3.04605e-05, 4.647, -0.0128869);
+    fit2->SetParameters(6.48699,-0.0213749,47.7895,-0.00057454,4.54381e-07);
     fit2->Draw("same");
     cb -> SaveAs(Form("%s/R%s_banana2Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -390,12 +408,12 @@ TF1* banana2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
 
 TF1* banana3(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists3, TH2D* energy_slowfasttimediff_hists3, std::string dirPathplots)
 {
-    std::cout <<"Fitting banana3 (>50 < 63 ns offset) for CFD - detector L \n" << i << std::endl;
+    std::cout <<"Fitting banana3 (>56 < 73 ns offset) for CFD - detector L \n" << i << std::endl;
 
     int yBins = slowfasttimediff_energy_hists3->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists3->GetXaxis()->GetNbins();
 
-    int slicewidth = 50, bin = 1, binmax = 1;
+    int slicewidth = 20, bin = 1, binmax = 1;
 
     std::vector<Double_t> slice_charge(yBins);
     std::vector<Double_t> slice_charge_err(yBins);
@@ -433,7 +451,7 @@ TF1* banana3(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -462,12 +480,12 @@ TF1* banana3(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr3 -> SetMarkerStyle(20);
     gr3 -> SetMarkerSize(0.8);
     gr3 -> SetMarkerColor(kBlue);
-    gr3->GetYaxis()->SetRangeUser(30, 63);
+    gr3->GetYaxis()->SetRangeUser(0, 120);
     gr3->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit3 = new TF1("fit3", "pol3(0)", 0, 1855);
+    TF1* fit3 = new TF1("fit3", "pol3(0)", 47, 1700);
     gr3->Draw("AL*");
     gr3->Fit("fit3", "");
-    fit3->SetParameters( 7.38587e+01, -8.80705e-02, 8.30458e-05, -2.19689e-08);
+    fit3->SetParameters(70.9007, -0.0225665,-1.03825e-05,1.41102e-08 );
     fit3->Draw("same");
     cb -> SaveAs(Form("%s/R%s_banana3Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -485,12 +503,12 @@ TF1* banana3(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
 
 TF1* banana4(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists4, TH2D* energy_slowfasttimediff_hists4, std::string dirPathplots)
 {
-    std::cout <<"Fitting banana4 (>63 < 114 ns offset) for CFD - detector L \n" << i << std::endl;
+    std::cout <<"Fitting banana4 (>73 < 102 ns offset) for CFD - detector L \n" << i << std::endl;
 
     int yBins = slowfasttimediff_energy_hists4->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists4->GetXaxis()->GetNbins();
 
-    int slicewidth = 50, bin = 1, binmax = 1;
+    int slicewidth = 20, bin = 1, binmax = 1;
 
     std::vector<Double_t> slice_charge(yBins);
     std::vector<Double_t> slice_charge_err(yBins);
@@ -528,7 +546,7 @@ TF1* banana4(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -557,12 +575,12 @@ TF1* banana4(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr4 -> SetMarkerStyle(20);
     gr4 -> SetMarkerSize(0.8);
     gr4 -> SetMarkerColor(kBlue);
-    gr4->GetYaxis()->SetRangeUser(0, 114);
+    gr4->GetYaxis()->SetRangeUser(0, 102);
     gr4->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit4 = new TF1("fit4", "pol0(0)", 0, 2000);
+    TF1* fit4 = new TF1("fit4", "pol2(0)+expo(3)", 50, 400);
     gr4->Draw("AL*");
     gr4->Fit("fit4", "");
-    fit4->SetParameters(68.3196);
+    fit4->SetParameters(-9.38799e+02,2.74694e+00,-2.25030e-03,6.97939e+00,-3.27849e-03);
     fit4->Draw("same");
     cb -> SaveAs(Form("%s/R%s_banana4Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -578,9 +596,9 @@ TF1* banana4(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     return fit4;
 }
 
-TF1* banana5(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists5, TH2D* energy_slowfasttimediff_hists5, std::string dirPathplots)
+TF1* banana5_1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists5, TH2D* energy_slowfasttimediff_hists5, std::string dirPathplots)
 {
-    std::cout <<"Fitting banana5 (>114 < 300 ns offset) for CFD - detector L \n" << i << std::endl;
+    std::cout <<"Fitting banana5 (>102 < 300 ns offset) for CFD - detector L \n" << i << std::endl;
 
     int yBins = slowfasttimediff_energy_hists5->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists5->GetXaxis()->GetNbins();
@@ -623,7 +641,7 @@ TF1* banana5(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -638,7 +656,7 @@ TF1* banana5(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         bin = binmax;
     }
 
-    p -> SaveAs(Form("%s/R%s_banana5Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    p -> SaveAs(Form("%s/R%s_banana5_1Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     delete p;
 
     printf("Fitting banana5s for detector %d...\n", i);
@@ -654,12 +672,12 @@ TF1* banana5(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr5 -> SetMarkerColor(kBlue);
     gr5->GetYaxis()->SetRangeUser(0, 300);
     gr5->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit5 = new TF1("fit5", "pol0(0)", 0, 2000);
+    TF1* fit5 = new TF1("fit5", "expo(0)", 0, 150);
     gr5->Draw("AL*");
     gr5->Fit("fit5", "");
-    fit5->SetParameters(139.501);
+    fit5->SetParameters(5.52032e+00,-1.73912e-02);
     fit5->Draw("same");
-    cb -> SaveAs(Form("%s/R%s_banana5Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    cb -> SaveAs(Form("%s/R%s_banana5_1Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
 
     delete gr5;
@@ -671,6 +689,101 @@ TF1* banana5(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
 
     printf("Returning banana5 fit for detector %d...\n", i);
     return fit5;
+}
+
+TF1* banana5_2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists5, TH2D* energy_slowfasttimediff_hists5, std::string dirPathplots)
+{
+    std::cout <<"Fitting banana5 (>102 < 300 ns offset) for CFD - detector L \n" << i << std::endl;
+
+    int yBins = slowfasttimediff_energy_hists5->GetYaxis()->GetNbins();
+    int xBins = slowfasttimediff_energy_hists5->GetXaxis()->GetNbins();
+
+    int slicewidth = 20, bin = 1, binmax = 1;
+
+    std::vector<Double_t> slice_charge(yBins);
+    std::vector<Double_t> slice_charge_err(yBins);
+    std::vector<Double_t> slice_time(yBins);
+    std::vector<Double_t> slice_time_err(yBins);
+
+    TCanvas * p = new TCanvas("p", "slices", 800, 600);
+    p->Divide(5,5);
+    int l = 3;
+    p->cd(1);
+    slowfasttimediff_energy_hists5->Draw();
+    p->cd(2);
+    energy_slowfasttimediff_hists5->Draw();
+
+    yBins = slowfasttimediff_energy_hists5->GetYaxis()->GetNbins();
+
+    while (bin < yBins)
+    {
+        //if (bin > 4200) slicewidth = 150;
+
+        binmax = bin + slicewidth;
+        if (binmax > yBins) binmax = yBins;
+
+        TH1D* ProjX = slowfasttimediff_energy_hists5->ProjectionX(Form("ProjX%d", bin), bin, binmax);        
+        if (ProjX->GetEntries() == 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        TF1* fitSlice = new TF1("fitSlice", "gaus(0)",  35, 60);
+
+        p->cd(l);
+        ProjX->Fit("fitSlice", "Q");
+        ProjX->Draw("same");
+        fitSlice->Draw("same");
+
+        if (fitSlice->GetParameter(1) <= 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        slice_charge.push_back((bin+binmax)/2.);
+        slice_charge_err.push_back(slicewidth/2.);
+        slice_time.push_back(fitSlice->GetParameter(1));
+        slice_time_err.push_back(fitSlice->GetParameter(2));
+
+        l++;
+        bin = binmax;
+    }
+
+    p -> SaveAs(Form("%s/R%s_banana5_2Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    delete p;
+
+    printf("Fitting banana5s for detector %d...\n", i);
+
+    TCanvas* cb = new TCanvas();
+	TGraphErrors* gr5 = new TGraphErrors(slice_charge.size(), &slice_charge[0], &slice_time[0], &slice_charge_err[0], &slice_time_err[0]);
+    gr5 -> SetTitle(Form("Banana5 Fit L%d", i));
+    //gr5 -> SetStats(0);
+	gr5 -> GetYaxis()->SetTitle("Centroid Time Difference (ns)");
+	gr5 -> GetXaxis()->SetTitle("Centroid Energy (keV)");
+    gr5 -> SetMarkerStyle(20);
+    gr5 -> SetMarkerSize(0.8);
+    gr5 -> SetMarkerColor(kBlue);
+    gr5->GetYaxis()->SetRangeUser(0, 300);
+    gr5->GetXaxis()->SetRangeUser(0, 2000);
+    gr5->Draw("AL*");
+    TF1 * fitt = new TF1("fitt", "expo(0)", 180, 450);
+    gr5->Fit("fitt", "");
+    fitt->SetParameters(4.85465e+00,-2.86881e-17);
+    fitt->Draw("same");
+    cb -> SaveAs(Form("%s/R%s_banana5_2Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    cb->Write();
+
+    delete gr5;
+    printf("Clearing variables for detector...\n");
+    slice_charge.clear();
+    slice_charge_err.clear();
+    slice_time.clear();
+    slice_time_err.clear();
+
+    printf("Returning banana5 fit for detector %d...\n", i);
+    return fitt;
 }
 
 TF1* banana6(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists6, TH2D* energy_slowfasttimediff_hists6, std::string dirPathplots)
@@ -718,7 +831,7 @@ TF1* banana6(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -747,12 +860,12 @@ TF1* banana6(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr6 -> SetMarkerStyle(20);
     gr6 -> SetMarkerSize(0.8);
     gr6 -> SetMarkerColor(kBlue);
-    gr6->GetYaxis()->SetRangeUser(0, 18);
-    gr6->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit6 = new TF1("fit6", "exp([p0]+[p1]*x)", 330, 2000);
+    gr6->GetYaxis()->SetRangeUser(0, 30);
+    gr6->GetXaxis()->SetRangeUser(550, 2000);
+    TF1* fit6 = new TF1("fit6", "pol2(0)", 330, 2000);
     gr6->Draw("AL*");
     gr6->Fit("fit6", "");
-    fit6->SetParameters(2.82564e+00,-1.79946e-04);
+    fit6->SetParameters(2.63595e+01, -1.24823e-02,3.80862e-06);
     fit6->Draw("same");
     cb -> SaveAs(Form("%s/R%s_banana6Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -768,7 +881,7 @@ TF1* banana6(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     return fit6;
 }
 
-TF1* banana7(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists7, TH2D* energy_slowfasttimediff_hists7, std::string dirPathplots)
+TF1* banana7_1(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists7, TH2D* energy_slowfasttimediff_hists7, std::string dirPathplots)
 {
     std::cout <<"Fitting banana7 (>18 < 32 ns offset) for CFD - detector L \n" << i << std::endl;
 
@@ -813,7 +926,7 @@ TF1* banana7(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -828,7 +941,7 @@ TF1* banana7(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         bin = binmax;
     }
 
-    p -> SaveAs(Form("%s/R%s_banana7Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    p -> SaveAs(Form("%s/R%s_banana7_2Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     delete p;
 
     printf("Fitting banana7s for detector %d...\n", i);
@@ -843,13 +956,13 @@ TF1* banana7(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr7 -> SetMarkerSize(0.8);
     gr7 -> SetMarkerColor(kBlue);
     gr7->GetYaxis()->SetRangeUser(18, 32);
-    gr7->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit7 = new TF1("fit7", "expo(0)+pol2(2)", 215,1650);
+    gr7->GetXaxis()->SetRangeUser(0, 900);
+    TF1* fit7 = new TF1("fit7", "pol2(0)", 222, 900);
     gr7->Draw("AL*");
     gr7->Fit("fit7", "");
-    fit7->SetParameters(3.94201e+00, -2.04690e-03, -1.17204e+01, 5.03149e-02, -1.74425e-05);
+    fit7->SetParameters(37.8859,-0.0182283,9.5443e-06);
     fit7->Draw("same");
-    cb -> SaveAs(Form("%s/R%s_banana7Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    cb -> SaveAs(Form("%s/R%s_banana7_1Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
 
     delete gr7;
@@ -863,6 +976,101 @@ TF1* banana7(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     return fit7;
 }
 
+TF1* banana7_2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists7, TH2D* energy_slowfasttimediff_hists7, std::string dirPathplots)
+{
+    std::cout <<"Fitting banana7 (>18 < 32 ns offset) for CFD - detector L \n" << i << std::endl;
+
+    int yBins = slowfasttimediff_energy_hists7->GetYaxis()->GetNbins();
+    int xBins = slowfasttimediff_energy_hists7->GetXaxis()->GetNbins();
+
+    int slicewidth = 20, bin = 1, binmax = 1;
+
+    std::vector<Double_t> slice_charge(yBins);
+    std::vector<Double_t> slice_charge_err(yBins);
+    std::vector<Double_t> slice_time(yBins);
+    std::vector<Double_t> slice_time_err(yBins);
+
+    TCanvas * p = new TCanvas("p", "slices", 800, 600);
+    p->Divide(5,5);
+    int l = 3;
+    p->cd(1);
+    slowfasttimediff_energy_hists7->Draw();
+    p->cd(2);
+    energy_slowfasttimediff_hists7->Draw();
+
+    yBins = slowfasttimediff_energy_hists7->GetYaxis()->GetNbins();
+
+    while (bin < yBins)
+    {
+        //if (bin > 4200) slicewidth = 150;
+
+        binmax = bin + slicewidth;
+        if (binmax > yBins) binmax = yBins;
+
+        TH1D* ProjX = slowfasttimediff_energy_hists7->ProjectionX(Form("ProjX%d", bin), bin, binmax);        
+        if (ProjX->GetEntries() == 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        TF1* fitSlice = new TF1("fitSlice", "gaus(0)",  35, 60);
+
+        p->cd(l);
+        ProjX->Fit("fitSlice", "Q");
+        ProjX->Draw("same");
+        fitSlice->Draw("same");
+
+        if (fitSlice->GetParameter(1) <= 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        slice_charge.push_back((bin+binmax)/2.);
+        slice_charge_err.push_back(slicewidth/2.);
+        slice_time.push_back(fitSlice->GetParameter(1));
+        slice_time_err.push_back(fitSlice->GetParameter(2));
+
+        l++;
+        bin = binmax;
+    }
+
+    p -> SaveAs(Form("%s/R%s_banana7_2Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    delete p;
+
+    printf("Fitting banana7s for detector %d...\n", i);
+
+    TCanvas* cb = new TCanvas();
+    TGraphErrors* gr7 = new TGraphErrors(slice_charge.size(), &slice_charge[0], &slice_time[0], &slice_charge_err[0], &slice_time_err[0]);
+    gr7 -> SetTitle(Form("Banana7 Fit L%d", i));
+    //gr7 -> SetStats(0);
+    gr7 -> GetYaxis()->SetTitle("Centroid Time Difference (ns)");
+    gr7 -> GetXaxis()->SetTitle("Centroid Energy (keV)");
+    gr7 -> SetMarkerStyle(20);
+    gr7 -> SetMarkerSize(0.8);
+    gr7 -> SetMarkerColor(kBlue);
+    gr7->GetYaxis()->SetRangeUser(18, 32);
+    gr7->GetXaxis()->SetRangeUser(9000, 2000);
+    TF1* fitt7 = new TF1("fitt7", "pol2(0)", 900, 1970);
+    gr7->Draw("AL*");
+    gr7->Fit("fitt7", "");
+    fitt7->SetParameters(23.2273, -0.00423945, 1.47897e-06);
+    fitt7->Draw("same");
+    cb -> SaveAs(Form("%s/R%s_banana7_2Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    cb->Write();
+
+    delete gr7;
+    printf("Clearing variables for detector...\n");
+    slice_charge.clear();
+    slice_charge_err.clear();
+    slice_time.clear();
+    slice_time_err.clear();
+
+    printf("Returning banana7 fit for detector %d...\n", i);
+    return fitt7;
+}
+
 TF1* banana8(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists8, TH2D* energy_slowfasttimediff_hists8, std::string dirPathplots)
 {
     std::cout <<"Fitting banana8 (>32 < 56ns offset) for CFD - detector L \n" << i << std::endl;
@@ -870,7 +1078,7 @@ TF1* banana8(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     int yBins = slowfasttimediff_energy_hists8->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists8->GetXaxis()->GetNbins();
 
-    int slicewidth = 50, bin = 1, binmax = 1;
+    int slicewidth = 20, bin = 1, binmax = 1;
 
     std::vector<Double_t> slice_charge(yBins);
     std::vector<Double_t> slice_charge_err(yBins);
@@ -908,7 +1116,7 @@ TF1* banana8(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -939,10 +1147,10 @@ TF1* banana8(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr8 -> SetMarkerColor(kBlue);
     gr8->GetYaxis()->SetRangeUser(32, 56);
     gr8->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit8 = new TF1("fit8", "expo(0)+pol2(2)", 106,1950);
+    TF1* fit8 = new TF1("fit8", "pol3(0)", 111,1500);
     gr8->Draw("AL*");
     gr8->Fit("fit8", "");
-    fit8->SetParameters( 1.19117e+01, 3.39559e-02, -8.77568e-06, 4.05980e+00, -3.19032e-03);
+    fit8->SetParameters(71.4321,-0.0943406,7.96066e-05,-2.21986e-08);
     fit8->Draw("same");
     cb -> SaveAs(Form("%s/R%s_banana8Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -965,7 +1173,7 @@ TF1* banana9(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     int yBins = slowfasttimediff_energy_hists9->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists9->GetXaxis()->GetNbins();
 
-    int slicewidth = 50, bin = 1, binmax = 1;
+    int slicewidth = 20, bin = 1, binmax = 1;
 
     std::vector<Double_t> slice_charge(yBins);
     std::vector<Double_t> slice_charge_err(yBins);
@@ -1003,7 +1211,7 @@ TF1* banana9(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -1033,12 +1241,12 @@ TF1* banana9(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_en
     gr9 -> SetMarkerStyle(20);
     gr9 -> SetMarkerSize(0.8);
     gr9 -> SetMarkerColor(kBlue);
-    gr9->GetYaxis()->SetRangeUser(56, 74);
-    gr9->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit9 = new TF1("fit9", "pol3(0)", 67,1640);
+    gr9->GetYaxis()->SetRangeUser(55, 60);
+    gr9->GetXaxis()->SetRangeUser(400, 2000);
+    TF1* fit9 = new TF1("fit9", "expo(0)", 340,1580);
     gr9->Draw("AL*");
     gr9->Fit("fit9", "");
-    fit9->SetParameters(7.31927e+01, -5.72998e-02, 7.78380e-05, -2.89611e-08);
+    fit9->SetParameters(4.03405e+00,8.59436e-06);
     fit9->Draw("same");
     cb -> SaveAs(Form("%s/R%s_banana9Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -1062,7 +1270,7 @@ TF1* banana10(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_e
     int yBins = slowfasttimediff_energy_hists10->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists10->GetXaxis()->GetNbins();
 
-    int slicewidth = 50, bin = 1, binmax = 1;
+    int slicewidth = 20, bin = 1, binmax = 1;
 
     std::vector<Double_t> slice_charge(yBins);
     std::vector<Double_t> slice_charge_err(yBins);
@@ -1100,7 +1308,7 @@ TF1* banana10(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_e
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -1157,7 +1365,7 @@ TF1* banana11(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_e
     int yBins = slowfasttimediff_energy_hists11->GetYaxis()->GetNbins();
     int xBins = slowfasttimediff_energy_hists11->GetXaxis()->GetNbins();
 
-    int slicewidth = 50, bin = 1, binmax = 1;
+    int slicewidth = 20, bin = 1, binmax = 1;
 
     std::vector<Double_t> slice_charge(yBins);
     std::vector<Double_t> slice_charge_err(yBins);
@@ -1195,7 +1403,7 @@ TF1* banana11(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_e
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -1224,12 +1432,12 @@ TF1* banana11(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_e
     gr11 -> SetMarkerStyle(20);
     gr11 -> SetMarkerSize(0.8);
     gr11 -> SetMarkerColor(kBlue);
-    gr11->GetYaxis()->SetRangeUser(102, 300);
-    gr11->GetXaxis()->SetRangeUser(0, 2000);
-    TF1* fit11 = new TF1("fit11", "pol0(0)", 0, 2000);
+    gr11->GetYaxis()->SetRangeUser(0, 300);
+    gr11->GetXaxis()->SetRangeUser(0, 140);
+    TF1* fit11 = new TF1("fit11", "expo(0)", 0, 2000);
     gr11->Draw("AL*");
     gr11->Fit("fit11", "");
-    fit11->SetParameters(136.142);
+    fit11->SetParameters(5.33894e+00,-1.19345e-02);
     fit11->Draw("same");
     cb -> SaveAs(Form("%s/R%s_banana11Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
     cb->Write();
@@ -1243,6 +1451,196 @@ TF1* banana11(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_e
 
     printf("Returning banana11 fit for detector %d...\n", i);
     return fit11;
+}
+
+TF1* banana6_2(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists6_2, TH2D* energy_slowfasttimediff_hists6_2, std::string dirPathplots)
+{
+    std::cout <<"Fitting banana11 (>102 < 300 ns offset) for CFD - detector L \n" << i << std::endl;
+
+    int yBins = slowfasttimediff_energy_hists6_2->GetYaxis()->GetNbins();
+    int xBins = slowfasttimediff_energy_hists6_2->GetXaxis()->GetNbins();
+
+    int slicewidth = 20, bin = 1, binmax = 1;
+
+    std::vector<Double_t> slice_charge(yBins);
+    std::vector<Double_t> slice_charge_err(yBins);
+    std::vector<Double_t> slice_time(yBins);
+    std::vector<Double_t> slice_time_err(yBins);
+
+    TCanvas * p = new TCanvas("p", "slices", 800, 600);
+    p->Divide(5,5);
+    int l = 3;
+    p->cd(1);
+    slowfasttimediff_energy_hists6_2->Draw();
+    p->cd(2);
+    energy_slowfasttimediff_hists6_2->Draw();
+
+    yBins = slowfasttimediff_energy_hists6_2->GetYaxis()->GetNbins();
+
+    while (bin < yBins)
+    {
+        //if (bin > 4200) slicewidth = 150;
+
+        binmax = bin + slicewidth;
+        if (binmax > yBins) binmax = yBins;
+
+        TH1D* ProjX = slowfasttimediff_energy_hists6_2->ProjectionX(Form("ProjX%d", bin), bin, binmax);        
+        if (ProjX->GetEntries() == 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        TF1* fitSlice = new TF1("fitSlice", "gaus(0)",  35, 60);
+
+        p->cd(l);
+        ProjX->Fit("fitSlice", "Q");
+        ProjX->Draw("same");
+        fitSlice->Draw("same");
+
+        if (fitSlice->GetParameter(1) <= 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        slice_charge.push_back((bin+binmax)/2.);
+        slice_charge_err.push_back(slicewidth / 2.);
+        slice_time.push_back(fitSlice->GetParameter(1));
+        slice_time_err.push_back(fitSlice->GetParameter(2));
+
+        l++;
+        bin = binmax;
+    }
+
+    p -> SaveAs(Form("%s/R%s_banana6_2Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    delete p;
+
+    printf("Fitting banana6_2s for detector %d...\n", i);
+
+    TCanvas* c6_2 = new TCanvas();
+    TGraphErrors* gr6_2 = new TGraphErrors(slice_charge.size(), &slice_charge[0], &slice_time[0], &slice_charge_err[0], &slice_time_err[0]);
+    gr6_2 -> SetTitle(Form("Banana6_2 Fit L%d", i));
+    //gr6_2 -> SetStats(0);
+    gr6_2 -> GetYaxis()->SetTitle("Centroid Time Difference (ns)");
+    gr6_2 -> GetXaxis()->SetTitle("Centroid Energy (keV)");
+    gr6_2 -> SetMarkerStyle(20);
+    gr6_2 -> SetMarkerSize(0.8);
+    gr6_2 -> SetMarkerColor(kBlue);
+    gr6_2->GetYaxis()->SetRangeUser(0, 200);
+    gr6_2->GetXaxis()->SetRangeUser(0, 300);
+    TF1* fit6_2 = new TF1("fit6_2", "pol2(0)+expo(3)", 9, 300);
+    gr6_2->Draw("AL*");
+    gr6_2->Fit("fit6_2", "");
+    fit6_2->SetParameters(-294.674,1.86449,-0.00292699,6.22,-0.00791423); 
+    fit6_2->Draw("same");
+    c6_2 -> SaveAs(Form("%s/R%s_banana6_2Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    c6_2->Write();
+
+    delete gr6_2;
+    printf("Clearing variables for detector...\n");
+    slice_charge.clear();
+    slice_charge_err.clear();
+    slice_time.clear();
+    slice_time_err.clear();
+
+    printf("Returning banana6_2 fit for detector %d...\n", i);
+    return fit6_2;
+}
+
+TF1* banana6_3(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists6_3, TH2D* energy_slowfasttimediff_hists6_3, std::string dirPathplots)
+{
+    std::cout <<"Fitting banana11 (>102 < 300 ns offset) for CFD - detector L \n" << i << std::endl;
+
+    int yBins = slowfasttimediff_energy_hists6_3->GetYaxis()->GetNbins();
+    int xBins = slowfasttimediff_energy_hists6_3->GetXaxis()->GetNbins();
+
+    int slicewidth = 20, bin = 1, binmax = 1;
+
+    std::vector<Double_t> slice_charge(yBins);
+    std::vector<Double_t> slice_charge_err(yBins);
+    std::vector<Double_t> slice_time(yBins);
+    std::vector<Double_t> slice_time_err(yBins);
+
+    TCanvas * p = new TCanvas("p", "slices", 800, 600);
+    p->Divide(5,5);
+    int l = 3;
+    p->cd(1);
+    slowfasttimediff_energy_hists6_3->Draw();
+    p->cd(2);
+    energy_slowfasttimediff_hists6_3->Draw();
+
+    yBins = slowfasttimediff_energy_hists6_3->GetYaxis()->GetNbins();
+
+    while (bin < yBins)
+    {
+        //if (bin > 4200) slicewidth = 150;
+
+        binmax = bin + slicewidth;
+        if (binmax > yBins) binmax = yBins;
+
+        TH1D* ProjX = slowfasttimediff_energy_hists6_3->ProjectionX(Form("ProjX%d", bin), bin, binmax);        
+        if (ProjX->GetEntries() == 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        TF1* fitSlice = new TF1("fitSlice", "gaus(0)",  35, 60);
+
+        p->cd(l);
+        ProjX->Fit("fitSlice", "Q");
+        ProjX->Draw("same");
+        fitSlice->Draw("same");
+
+        if (fitSlice->GetParameter(1) <= 0) 
+        {
+            delete ProjX;
+            bin = binmax;
+            continue;
+        }
+        slice_charge.push_back((bin+binmax)/2.);
+        slice_charge_err.push_back(slicewidth / 2.);
+        slice_time.push_back(fitSlice->GetParameter(1));
+        slice_time_err.push_back(fitSlice->GetParameter(2));
+
+        l++;
+        bin = binmax;
+    }
+
+    p -> SaveAs(Form("%s/R%s_banana6_3Slices_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    delete p;
+
+    printf("Fitting banana6_3s for detector %d...\n", i);
+
+    TCanvas* c6_3 = new TCanvas();
+    TGraphErrors* gr6_3 = new TGraphErrors(slice_charge.size(), &slice_charge[0], &slice_time[0], &slice_charge_err[0], &slice_time_err[0]);
+    gr6_3 -> SetTitle(Form("Banana6_3 Fit L%d", i));
+    //gr6_3 -> SetStats(0);
+    gr6_3 -> GetYaxis()->SetTitle("Centroid Time Difference (ns)");
+    gr6_3 -> GetXaxis()->SetTitle("Centroid Energy (keV)");
+    gr6_3 -> SetMarkerStyle(20);
+    gr6_3 -> SetMarkerSize(0.8);
+    gr6_3 -> SetMarkerColor(kBlue);
+    gr6_3->GetYaxis()->SetRangeUser(0, 200);
+    gr6_3->GetXaxis()->SetRangeUser(0, 300);
+    TF1* fit6_3 = new TF1("fit6_3", "pol2(0)+expo(3)", 100, 200);
+    gr6_3->Draw("AL*");
+    gr6_3->Fit("fit6_3", "");
+    fit6_3->SetParameters(-294.674,1.86449,-0.00292699,6.22,-0.00791423); 
+    fit6_3->Draw("same");
+    c6_3 -> SaveAs(Form("%s/R%s_banana6_3Fit_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+    c6_3->Write();
+
+    delete gr6_3;
+    printf("Clearing variables for detector...\n");
+    slice_charge.clear();
+    slice_charge_err.clear();
+    slice_time.clear();
+    slice_time_err.clear();
+
+    printf("Returning banana6_3 fit for detector %d...\n", i);
+    return fit6_3;
 }
 
 TF1* bananafinal(std::string run,TFile *outputFile, int i, TH2D* slowfasttimediff_energy_hists_again, TH2D* energy_slowfasttimediff_hists_again, std::string dirPathplots)
@@ -1290,7 +1688,7 @@ TF1* bananafinal(std::string run,TFile *outputFile, int i, TH2D* slowfasttimedif
         ProjX->Draw("same");
         fitSlice->Draw("same");
 
-        if (fitSlice->GetParameter(1) < 0) 
+        if (fitSlice->GetParameter(1) <= 0) 
         {
             delete ProjX;
             bin = binmax;
@@ -1508,7 +1906,6 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     printf("\n\nAligning offsets...\n");
     
     dir_aligned->cd();
-    printf("\nCloning the TTree...\n");
     // Set branch addresses for each detector
     for (int i = 0; i < NumDetectors; i++) 
     {
@@ -1562,37 +1959,44 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
         // Full
         slowfasttimediff_energy_hists[i] = new TH2D(Form("slowfasttimediff_energy_hists_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  600, 0, 600, 2000, 0, 2000);
         energy_slowfasttimediff_hists[i] = new TH2D(Form("energy_slowfasttimediff_hists_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 600, 0, 600);
-        timeOffsetCorrectedHistsfirst[i] = new TH1D(Form("timeOffsetCorrectedHists%d", i), Form("Corrected time offset : L%d", i),  600, -300, 300);
+        /* timeOffsetCorrectedHistsfirst[i] = new TH1D(Form("timeOffsetCorrectedHists%d", i), Form("Corrected time offset : L%d", i),  600, -300, 300);
         timeEnergyOffsetCorrectedHistsfirst[i] = new TH2D(Form("timeEnergyOffsetCorrectedHists%d", i), Form("Corrected time offset vs energy: L%d", i),  600, -300, 300, 2000, 0, 2000);
-        timeOffsetCorrectedHists[i] = new TH1D(Form("timeOffsetCorrectedHists%d", i), Form("Corrected time offset : L%d", i),  600, -300, 300);
-        timeEnergyOffsetCorrectedHists[i] = new TH2D(Form("timeEnergyOffsetCorrectedHists%d", i), Form("Corrected time offset vs energy: L%d", i),  600, -300, 300, 2000, 0, 2000);
-
+         */
+        timeOffsetCorrectedHists[i] = new TH1D(Form("timeOffsetCorrectedHists_%d", i), Form("Corrected time offset : L%d", i),  600, -300, 300);
+        timeEnergyOffsetCorrectedHists[i] = new TH2D(Form("timeEnergyOffsetCorrectedHists_%d", i), Form("Corrected time offset vs energy: L%d", i),  600, -300, 300, 2000, 0, 2000);
+        timefastslowratio_hists[i] = new TH1D(Form("timefastslowratio_hists_%d", i), Form("Time fast/slow ratio: L%d", i),  20, -10, 10);
     }
 
     for (int i = 0; i < 1; i++) 
     {
         // banana 1 for L0 (Det8)
-        slowfasttimediff_energy_hists1[i] = new TH2D(Form("slowfasttimediff_energy_hists1_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  32, 0, 32, 2000, 0, 2000);
-        energy_slowfasttimediff_hists1[i] = new TH2D(Form("energy_slowfasttimediff_hists1_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 32, 0, 32);
+        slowfasttimediff_energy_hists1[i] = new TH2D(Form("slowfasttimediff_energy_hists1_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  40, 0, 40, 2000, 0, 2000);
+        energy_slowfasttimediff_hists1[i] = new TH2D(Form("energy_slowfasttimediff_hists1_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 40, 0, 40);
 
         // banana 2 for L0 (Det8)
-        slowfasttimediff_energy_hists2[i] = new TH2D(Form("slowfasttimediff_energy_hists2_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  18, 32, 50,  2000, 0, 2000);
-        energy_slowfasttimediff_hists2[i] = new TH2D(Form("energy_slowfasttimediff_hists2_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 18, 32, 50);
+        slowfasttimediff_energy_hists2[i] = new TH2D(Form("slowfasttimediff_energy_hists2_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  16, 40, 56,  2000, 0, 2000);
+        energy_slowfasttimediff_hists2[i] = new TH2D(Form("energy_slowfasttimediff_hists2_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 16, 40, 56);
 
         // banana 3 for L0 (Det8)
-        slowfasttimediff_energy_hists3[i] = new TH2D(Form("slowfasttimediff_energy_hists3_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  13, 50, 63, 2000, 0, 2000);
-        energy_slowfasttimediff_hists3[i] = new TH2D(Form("energy_slowfasttimediff_hists3_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 13, 50, 63);
+        slowfasttimediff_energy_hists3[i] = new TH2D(Form("slowfasttimediff_energy_hists3_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  17, 56, 73, 2000, 0, 2000);
+        energy_slowfasttimediff_hists3[i] = new TH2D(Form("energy_slowfasttimediff_hists3_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 17, 56, 73);
 
         // banana 4 for L0 (Det8)
-        slowfasttimediff_energy_hists4[i] = new TH2D(Form("slowfasttimediff_energy_hists4_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  51, 63, 114,  2000, 0, 2000);
-        energy_slowfasttimediff_hists4[i] = new TH2D(Form("energy_slowfasttimediff_hists4_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 51, 63, 114);
+        slowfasttimediff_energy_hists4[i] = new TH2D(Form("slowfasttimediff_energy_hists4_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  29, 73, 102,  2000, 0, 2000);
+        energy_slowfasttimediff_hists4[i] = new TH2D(Form("energy_slowfasttimediff_hists4_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 29, 73, 102);
 
         // banana 5 for L0 (Det8)
-        slowfasttimediff_energy_hists5[i] = new TH2D(Form("slowfasttimediff_energy_hists5_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  186, 114, 300, 2000, 0, 2000);
-        energy_slowfasttimediff_hists5[i] = new TH2D(Form("energy_slowfasttimediff_hists5_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 186, 114, 300);
+        slowfasttimediff_energy_hists5[i] = new TH2D(Form("slowfasttimediff_energy_hists5_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  198, 102, 300, 2000, 0, 2000);
+        energy_slowfasttimediff_hists5[i] = new TH2D(Form("energy_slowfasttimediff_hists5_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 198, 102, 300);
 
-        slowfasttimediff_energy_hists_again[i] = new TH2D(Form("slowfasttimediff_energy_hists_again_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  30, 10, 40, 2000, 0, 2000);
-        energy_slowfasttimediff_hists_again[i] = new TH2D(Form("energy_slowfasttimediff_hists_again_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 30, 10, 40);
+        slowfasttimediff_energy_hists6_2[i] = new TH2D(Form("slowfasttimediff_energy_hists6_2_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  160, 40, 200, 2000, 0, 2000);
+        energy_slowfasttimediff_hists6_2[i] = new TH2D(Form("energy_slowfasttimediff_hists6_2_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 160, 40, 200);
+
+        slowfasttimediff_energy_hists6_3[i] = new TH2D(Form("slowfasttimediff_energy_hists6_3_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  160, 40, 200, 2000, 0, 2000);
+        energy_slowfasttimediff_hists6_3[i] = new TH2D(Form("energy_slowfasttimediff_hists6_3_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 160, 40, 200);
+
+        /*  slowfasttimediff_energy_hists_again[i] = new TH2D(Form("slowfasttimediff_energy_hists_again_%d", i), Form("Uncorrected time offset vs energy: L%d", i),  30, 10, 40, 2000, 0, 2000);
+        energy_slowfasttimediff_hists_again[i] = new TH2D(Form("energy_slowfasttimediff_hists_again_%d", i), Form("Uncorrected energy vs time offset: L%d", i),  2000, 0, 2000, 30, 10, 40); */
     }
     for (int i = 1; i < NumDetectors; i++)
     {
@@ -1646,8 +2050,8 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     correctedTree->Branch("timeP", &timePolarisCp[0], "timeP/D");
 
     // Initialize new TTree
-    TTree* correctedcorrectedTree = new TTree("LaBrDataCorrected2", "LaBrDataCorrected2"); // I had to create another tree as you cannot read in entries and write to the same tree :( 
-    for (int i = 0; i < 1; i++) 
+   /*  TTree* correctedcorrectedTree = new TTree("LaBrDataCorrected2", "LaBrDataCorrected2"); // I had to create another tree as you cannot read in entries and write to the same tree :( 
+    for (int i = 0; i < NumDetectors; i++) 
     {
         correctedcorrectedTree->Branch(Form("slowECalibL%d", i), &energySlowCp[i], Form("slowECalibL%d/D", i));
         correctedcorrectedTree->Branch(Form("timeFL%d", i), &timeFastCp[i], Form("timeFL%d/D", i));
@@ -1660,14 +2064,14 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
 
     // Initialize new TTree
     TTree* correctedcorrectedcorrectedTree = new TTree("LaBrDataCorrected3", "LaBrDataCorrected3"); // I had to create another tree as you cannot read in entries and write to the same tree :( 
-    for (int i = 0; i < 1; i++) 
+    for (int i = 0; i < NumDetectors; i++) 
     {
         correctedcorrectedcorrectedTree->Branch(Form("slowECalibL%d", i), &energySlowCp[i], Form("slowECalibL%d/D", i));
         correctedcorrectedcorrectedTree->Branch(Form("timeFL%d", i), &timeFastCp[i], Form("timeFL%d/D", i));
         correctedcorrectedcorrectedTree->Branch(Form("timeSCorrectedL%d", i), &timeSlowCorrectedCp[i], Form("timeSCorrectedL%d/D", i)); //new Branch
     }
     correctedcorrectedcorrectedTree->Branch("fastEPOLARIS", &energyPolarisCp[0], "fastEPOLARIS/D");
-    correctedcorrectedcorrectedTree->Branch("fastTPOLARIS", &timePolarisCp[0], "fastTPOLARIS/D");
+    correctedcorrectedcorrectedTree->Branch("fastTPOLARIS", &timePolarisCp[0], "fastTPOLARIS/D"); */
 
 
     // Variables for aligned tree data
@@ -1697,10 +2101,8 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
         {
             if (entry==0) printf("\n\nCalculating time offset for detector %d...\n", i);
             copyTree->GetEntry(entry);
-            //printf("timeFastL%d: %f, timeSlowL%d: %f, energySlowL%d: %f\n", i, timeFastCp[i], i, timeSlowCp[i], i, energySlowCp[i]);              
 
             if (timeFastCp[i] == 0) continue;
-
             Double_t refTimeFast = timeFastCp[i];
             Double_t nextTimeSlow = 0;
             Double_t deltaTime = 0;
@@ -1725,7 +2127,6 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                 else
                 {
                     timeOffsetBeforeCorrection[i] = static_cast<Double_t>(static_cast<int>(deltaTime));
-                    // printf("Detector %d: Time offset = %f\n", i, timeOffsetBeforeCorrection[i]);
                     // printf("Detector %d: deltaTime = %f\n", i, deltaTime);
                     
                     slowfasttimediff_hists[i]->Fill(deltaTime);
@@ -1744,8 +2145,12 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                         energy_slowfasttimediff_hists4[i]->Fill(energy, deltaTime);
                         slowfasttimediff_energy_hists5[i]->Fill(deltaTime, energy);
                         energy_slowfasttimediff_hists5[i]->Fill(energy, deltaTime);
+                        slowfasttimediff_energy_hists6_2[i]->Fill(deltaTime, energy);
+                        energy_slowfasttimediff_hists6_2[i]->Fill(energy, deltaTime);
+                        slowfasttimediff_energy_hists6_3[i]->Fill(deltaTime, energy);
+                        energy_slowfasttimediff_hists6_3[i]->Fill(energy, deltaTime);
                     }
-                    else 
+                    else if (i == 1)
                     {
                         slowfasttimediff_energy_hists6[i]->Fill(deltaTime, energy);
                         energy_slowfasttimediff_hists6[i]->Fill(energy, deltaTime);
@@ -1762,7 +2167,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                     }
                     break;
                 }
-
+                
             }
             offsetTree->Fill();
         }
@@ -1782,7 +2187,16 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
         c1->SaveAs(Form("%s/R%s_time_offset_hist_L%d.root", dirPathplots.c_str(), run.c_str(), i));
         c1->Write(Form("time_offset_hist_L%d", i));
         delete c1;
-        energy_slowfasttimediff_hists[i]->GetYaxis()->SetRangeUser(0, 600);
+              
+        TCanvas* c18 = new TCanvas(Form("c18_%d", i), Form("Uncorrected time offset energy matrix: L%d", i), 800, 600);
+        slowfasttimediff_energy_hists[i]->SetStats(0);
+        slowfasttimediff_energy_hists[i]->SetFillColor(kBlue);
+        slowfasttimediff_energy_hists[i]->GetXaxis()->SetTitle("Time slow - fast (ns)");
+        slowfasttimediff_energy_hists[i]->GetYaxis()->SetTitle("Energy (keV)");
+        slowfasttimediff_energy_hists[i]->Draw();
+        c18->SaveAs(Form("%s/R%s_time_offset_energy_hist_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+        c18->Write(Form("time_offset_energy_hist_L%d", i));
+        delete c18;
 
         dir_banana->cd();
 
@@ -1793,7 +2207,10 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
             banana2fit[i] = banana2(run,outputFile, i, slowfasttimediff_energy_hists2[i], energy_slowfasttimediff_hists2[i], dirPathplots);
             banana3fit[i] = banana3(run,outputFile, i, slowfasttimediff_energy_hists3[i], energy_slowfasttimediff_hists3[i], dirPathplots);
             banana4fit[i] = banana4(run,outputFile, i, slowfasttimediff_energy_hists4[i], energy_slowfasttimediff_hists4[i], dirPathplots);
-            banana5fit[i] = banana5(run,outputFile, i, slowfasttimediff_energy_hists5[i], energy_slowfasttimediff_hists5[i], dirPathplots);
+            banana5_1fit[i] = banana5_1(run,outputFile, i, slowfasttimediff_energy_hists5[i], energy_slowfasttimediff_hists5[i], dirPathplots);
+            banana5_2fit[i] = banana5_2(run,outputFile, i, slowfasttimediff_energy_hists5[i], energy_slowfasttimediff_hists5[i], dirPathplots);
+            banana6_2fit[i] = banana6_2(run,outputFile, i, slowfasttimediff_energy_hists6_2[i], energy_slowfasttimediff_hists6_2[i], dirPathplots);
+            banana6_3fit[i] = banana6_3(run,outputFile, i, slowfasttimediff_energy_hists6_3[i], energy_slowfasttimediff_hists6_3[i], dirPathplots);
 
             TCanvas * c2 = new TCanvas("c2", "banana", 800, 600);
             energy_slowfasttimediff_hists[i]->Draw();
@@ -1801,18 +2218,27 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
             banana2fit[i]->SetLineColor(kBlue);
             banana3fit[i]->SetLineColor(kGreen);
             banana4fit[i]->SetLineColor(kMagenta);
-            banana5fit[i]->SetLineColor(kYellow);
+            banana5_1fit[i]->SetLineColor(kYellow);
+            banana5_2fit[i]->SetLineColor(kYellow);
+            banana6_2fit[i]->SetLineColor(kWhite);
+            banana6_3fit[i]->SetLineColor(kWhite);
             banana1fit[i]->Draw("same");
             banana2fit[i]->Draw("same");
             banana3fit[i]->Draw("same");
             banana4fit[i]->Draw("same");
-            banana5fit[i]->Draw("same");
+            banana5_1fit[i]->Draw("same");
+            banana5_2fit[i]->Draw("same");
+            banana6_2fit[i]->Draw("same");
+            banana6_3fit[i]->Draw("same");
             TLegend *leg1 = new TLegend(0.1,0.7,0.48,0.9);
             leg1->AddEntry(banana1fit[i],"banana1fit","l");
             leg1->AddEntry(banana2fit[i],"banana2fit","l");
             leg1->AddEntry(banana3fit[i],"banana3fit","l");
             leg1->AddEntry(banana4fit[i],"banana4fit","l");
-            leg1->AddEntry(banana5fit[i],"banana5fit","l");
+            leg1->AddEntry(banana5_1fit[i],"banana5_1fit","l");
+            leg1->AddEntry(banana5_2fit[i],"banana5_2fit","l");
+            leg1->AddEntry(banana6_2fit[i],"banana6_2fit","l");
+            leg1->AddEntry(banana6_3fit[i],"banana6_3fit","l");
             leg1->Draw();
             c2->SaveAs(Form("%s/R%s_bananas_2Dfitfunction_L%d.root", dirPathplots.c_str(), run.c_str(), i));
             c2->Write(Form("bananas_2Dfitfunction_L%d", i));
@@ -1822,7 +2248,8 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
         {   
             printf("\n\nPerforming the banana fit for detector %d...\n", i);
             banana6fit[i] = banana6(run,outputFile, i, slowfasttimediff_energy_hists6[i], energy_slowfasttimediff_hists6[i], dirPathplots);
-            banana7fit[i] = banana7(run,outputFile, i, slowfasttimediff_energy_hists7[i], energy_slowfasttimediff_hists7[i], dirPathplots);
+            banana7_1fit[i] = banana7_1(run,outputFile, i, slowfasttimediff_energy_hists7[i], energy_slowfasttimediff_hists7[i], dirPathplots);
+            banana7_2fit[i] = banana7_2(run,outputFile, i, slowfasttimediff_energy_hists7[i], energy_slowfasttimediff_hists7[i], dirPathplots);
             banana8fit[i] = banana8(run,outputFile, i, slowfasttimediff_energy_hists8[i], energy_slowfasttimediff_hists8[i], dirPathplots);
             banana9fit[i] = banana9(run,outputFile, i, slowfasttimediff_energy_hists9[i], energy_slowfasttimediff_hists9[i], dirPathplots);
             banana10fit[i] = banana10(run,outputFile, i, slowfasttimediff_energy_hists10[i], energy_slowfasttimediff_hists10[i], dirPathplots);
@@ -1831,20 +2258,23 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
             TCanvas * c3 = new TCanvas("c3", "banana", 800, 600);
             energy_slowfasttimediff_hists[i]->Draw();
             banana6fit[i]->SetLineColor(kRed);
-            banana7fit[i]->SetLineColor(kBlue);
+            banana7_1fit[i]->SetLineColor(kBlue);
+            banana7_2fit[i]->SetLineColor(kBlue);
             banana8fit[i]->SetLineColor(kGreen);
             banana9fit[i]->SetLineColor(kMagenta);
             banana10fit[i]->SetLineColor(kYellow);
             banana11fit[i]->SetLineColor(kOrange);
             banana8fit[i]->Draw("same");
             banana6fit[i]->Draw("same");
-            banana7fit[i]->Draw("same");
+            banana7_1fit[i]->Draw("same");
+            banana7_2fit[i]->Draw("same");
             banana9fit[i]->Draw("same");
             banana10fit[i]->Draw("same");
             banana11fit[i]->Draw("same");
             TLegend *leg2 = new TLegend(0.1,0.7,0.48,0.9);
             leg2->AddEntry(banana6fit[i],"banana6fit","l");
-            leg2->AddEntry(banana7fit[i],"banana7fit","l");
+            leg2->AddEntry(banana7_1fit[i],"banana7_1fit","l");
+            leg2->AddEntry(banana7_2fit[i],"banana7_2fit","l");
             leg2->AddEntry(banana8fit[i],"banana8fit","l");
             leg2->AddEntry(banana9fit[i],"banana9fit","l");
             leg2->AddEntry(banana10fit[i],"banana10fit","l");
@@ -1872,12 +2302,16 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                 precomputedValues2[std::make_pair(i, e)] = banana2fit[i]->Eval(e);
                 precomputedValues3[std::make_pair(i, e)] = banana3fit[i]->Eval(e);
                 precomputedValues4[std::make_pair(i, e)] = banana4fit[i]->Eval(e);
-                precomputedValues5[std::make_pair(i, e)] = banana5fit[i]->Eval(e);
+                precomputedValues5_1[std::make_pair(i, e)] = banana5_1fit[i]->Eval(e);
+                precomputedValues5_2[std::make_pair(i, e)] = banana5_2fit[i]->Eval(e);
+                precomputedValues6_2[std::make_pair(i, e)] = banana6_2fit[i]->Eval(e);
+                precomputedValues6_3[std::make_pair(i, e)] = banana6_3fit[i]->Eval(e);
             }
             else
             {
                 precomputedValues6[std::make_pair(i, e)] = banana6fit[i]->Eval(e);
-                precomputedValues7[std::make_pair(i, e)] = banana7fit[i]->Eval(e);
+                precomputedValues7_1[std::make_pair(i, e)] = banana7_1fit[i]->Eval(e);
+                precomputedValues7_2[std::make_pair(i, e)] = banana7_2fit[i]->Eval(e);
                 precomputedValues8[std::make_pair(i, e)] = banana8fit[i]->Eval(e);
                 precomputedValues9[std::make_pair(i, e)] = banana9fit[i]->Eval(e);
                 precomputedValues10[std::make_pair(i, e)] = banana10fit[i]->Eval(e);
@@ -1903,75 +2337,100 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
 
             if (i==0)
             {
-                if ((t <= 32))
+                if ((t <= 40))
                 {
                     timeOffset = precomputedValues1[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 1 = %f\n", i, timeOffset);
                 } 
-                else if (t>32 && t<=50) 
+                else if (t>40 && t<=56) 
                 {
                     timeOffset = precomputedValues2[std::make_pair(i, e)];
                     // printf("Detector %d: Time Offset function 2 = %f\n", i, timeOffset);
                 }
-                else if (t>50 && t<=63) 
+                else if (t>56 && t<=73) 
                 {
                     timeOffset = precomputedValues3[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 3 = %f\n", i, timeOffset);
                 } 
-                else if (t>63 && t<=114) 
+                else if (t>73 && t<=102) 
                 {
                     timeOffset = precomputedValues4[std::make_pair(i, e)];
                     // printf("Detector %d: Time Offset function 4 = %f\n", i, timeOffset);
                 }
-                else if (t>114) 
+                /* else if (t>102 && e< 150) 
                 {
-                    timeOffset = precomputedValues5[std::make_pair(i, e)];
+                    timeOffset = precomputedValues5_1[std::make_pair(i, e)];
+                    // printf("Detector %d: Time Offset function 5 = %f\n", i, timeOffset);
+                }  */
+                else if (t>102 && e> 180) 
+                {
+                    timeOffset = precomputedValues5_2[std::make_pair(i, e)];
                     // printf("Detector %d: Time Offset function 5 = %f\n", i, timeOffset);
                 } 
+                else if (t > 60 && e< 150) 
+                {
+                    timeOffset = precomputedValues6_2[std::make_pair(i, e)];
+                    // printf("Detector %d: Time Offset function 5 = %f\n", i, timeOffset);
+                    if (t > 100)timeOffset = precomputedValues6_3[std::make_pair(i, e)];
+                } 
+                
+                else continue;
             }
-            else
+            else if (i == 1)
             {
                 if (t <= 18)
                 {
                     timeOffset = precomputedValues6[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 6 = %f\n", i, timeOffset);
                 }
-                if (t<=32 && t>18)
+                else if (t<=32 && t>18 && e < 900)
                 {
-                    timeOffset = precomputedValues7[std::make_pair(i, e)];
+                    timeOffset = precomputedValues7_1[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 7 = %f\n", i, timeOffset);
                 }
-                if (t<=56 && t>32)
+                else if (t<=32 && t>18 && e > 900)
+                {
+                    timeOffset = precomputedValues7_2[std::make_pair(i, e)];
+                    //printf("Detector %d: Time Offset function 7 = %f\n", i, timeOffset);
+                }
+                else if (t<=56 && t>32)
                 {
                     timeOffset = precomputedValues8[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 8 = %f\n", i, timeOffset);
                 }
-                if (t<=74 && t>56)
+                else if (t<=74 && t>56)
                 {
                     timeOffset = precomputedValues9[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 9 = %f\n", i, timeOffset);
                 }
-                if (t<=102 && t>74)
+                else if (t<=102 && t>74)
                 {
                     timeOffset = precomputedValues10[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 10 = %f\n", i, timeOffset);
                 }
-                if (t>102)
+                else if (t>102)
                 {
                     timeOffset = precomputedValues11[std::make_pair(i, e)];
                     //printf("Detector %d: Time Offset function 11 = %f\n", i, timeOffset);
                 }
+                else continue;
             }
-
+            
             // Calculate timeSlowCorrected and fill correctedTree using timeOffset
             if (timeOffset > 0) 
             {
                 timeSlowCorrected[i] = timeSlowCp[i] - timeOffset;
+                //printf("Detector %d: Time slow corrected = %f\n", i, timeSlowCorrected[i]);
+                //printf("Detector %d: Time slow = %f\n", i, timeSlowCp[i]/1e14);
+                if (timeSlowCorrected[i]/1e14 < 1) 
+                {
+                    continue;
+                }
                 correctedTree->Fill();
             }
         }
     }
-    for (int i = 0; i < NumDetectors; i++) 
+/*     for (int i = 0; i < NumDetectors; i++) 
     { 
         for (unsigned long long entry = 0; entry < numEntries; entry++)
         {
@@ -2103,12 +2562,13 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
             }
 
             timeSlowCorrectedCp[i] = timeSlowCorrected[i] - timeOffset;
+            if (timeSlowCorrectedCp[i] < 1e14) continue;
             correctedcorrectedcorrectedTree->Fill();
         }
     }
-    delete correctedcorrectedTree;
+    delete correctedcorrectedTree; */
 
-    // ________________________________________________________________
+    /* // ________________________________________________________________
     for (uint64_t entry = 0; entry < numEntries; entry++) 
     {
         for (int i = 0; i < 1; i++) 
@@ -2144,10 +2604,52 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                 break;
             }
         }
+    } */
+
+   // ________________________________________________________________
+    for (uint64_t entry = 0; entry < numEntries; entry++) 
+    {
+        for (int i = 0; i < NumDetectors; i++) 
+        {
+            if (entry == 0) printf("\n\nCalculating the corrected time offset for detector %d...\n", i);
+            
+            correctedTree->GetEntry(entry);
+            if (timeFastCp[i] == 0) continue;
+            Double_t refTimeFast = timeFastCp[i];
+            Double_t nextTimeSlow = 0;  // Initialize nextTimeSlow
+            Double_t deltaTime = 0; // Initialize deltaTime
+            Double_t nextEnergySlow = 0; // Initialize nextEnergySlow
+
+            uint64_t nextEntry = entry;
+
+            while (nextEntry < numEntries) 
+            {
+                correctedTree->GetEntry(nextEntry);
+
+                if (timeSlowCorrected[i] == 0) 
+                {
+                    nextEntry++; // Move to the next entry if timeSlowCp[i] is zero
+                    continue;
+                }
+                nextEnergySlow = energySlowCp[i];
+                nextTimeSlow = timeSlowCorrected[i];
+                //printf("\nDetector %d: Fast Time = %f, Slow Time = %f\n", i, refTimeFast, nextTimeSlow);
+                deltaTime = (nextTimeSlow - refTimeFast);
+                if (deltaTime > 1000.0) break; // Stop searching if time difference exceeds 1 microsecond
+                //printf("\nDetector %d: Corrected Time Offset = %f\n", i, deltaTime);
+                timeOffsetCorrectedHists[i]->Fill(deltaTime);
+                timeEnergyOffsetCorrectedHists[i]->Fill(deltaTime, nextEnergySlow);
+                break;
+            }
+        }
     }
 
     for (int i = 0; i < NumDetectors; i++) 
     {
+
+        timeOffsetCorrectedHists[i] ->Write();
+        timeEnergyOffsetCorrectedHists[i] ->Write();
+
         TCanvas * c5 = new TCanvas("c5", "CorrectedTimeOffsetFirst", 800, 600);
         timeOffsetCorrectedHists[i]->GetXaxis()->SetRangeUser(-100, 100);
         timeOffsetCorrectedHists[i]->SetFillColor(kBlue);
@@ -2172,8 +2674,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
         slowfasttimediff_hists[i]->Write();
         slowfasttimediff_energy_hists[i]->Write();
         energy_slowfasttimediff_hists[i]->Write();
-        timeOffsetCorrectedHists[i]->Write();
-        timeEnergyOffsetCorrectedHists[i]->Write();
+
     }
 
     // ________________________________________________________________
@@ -2183,8 +2684,8 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
         for (int i = 0; i < NumDetectors; i++) 
         {
             if (entry == 0) printf("\n\nAligning the data for detector %d...\n", i);
-            correctedcorrectedcorrectedTree->GetEntry(entry);
-            if (i == POLARISIndex) 
+            correctedTree->GetEntry(entry);
+            if ((timePolarisCp[0] !=0) && (energyPolarisCp[0]!=0))
             {
                 detectorID = POLARISIndex;
                 timeGlobal = timePolarisCp[0];
@@ -2197,33 +2698,14 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
             else if (i < RFIndex)
             {
                 detectorID = i;
-                // printf("\nDetector %d: timeFastCp = %f | , timeSlowCorrectedCp = %f\n", i, timeFastCp[i], timeSlowCorrected[i]);
-                if ((timeFastCp[i] == 0) && (timeSlowCorrectedCp[i] != 0)) 
-                {
-                    timeGlobal = timeSlowCorrectedCp[i];
-                    alignedTimeFast = timeFastCp[i];
-                    alignedEnergyFast = 0;
-                    alignedTimeSlow = timeSlowCorrectedCp[i];
-                    alignedEnergySlow = energySlowCp[i];
-                    //printf("Loop1 | , timeGlobal = %f | , timeFastCp = %f | , timeSlowCorrectedCp = %f, energyFast = %f | , energySlowCp = %f\n", timeGlobal[0], alignedTimeFast[0], alignedTimeSlow[0], alignedEnergyFast[0], alignedEnergySlow[0]);
-                }
-                else if ((timeFastCp[i] != 0) && (timeSlowCorrectedCp[i] == 0)) 
-                {
-                    timeGlobal = timeFastCp[i];
-                    alignedTimeFast = timeFastCp[i];
-                    alignedEnergyFast = 0;
-                    alignedTimeSlow = timeSlowCorrectedCp[i];
-                    alignedEnergySlow = energySlowCp[i];
-                    // printf("Loop2 | , timeGlobal = %f | , timeFastCp = %f | , timeSlowCorrectedCp = %f\n, energyFast = %f | , energySlowCp = %f\n", timeGlobal[0], alignedTimeFast[0], alignedTimeSlow[0], alignedEnergyFast[0], alignedEnergySlow[0]);
-                }
-                else if ((timeFastCp[i] != 0) && (timeSlowCorrectedCp[i] != 0)) 
+                if ((timeFastCp[i] != 0) && (timeSlowCorrected[i] != 0)) 
                 {
                     // The ratio in the print below should be 1
                     //printf("\nError: Both fast and slow times are non-zero for detector %d\n, timeFastCp = %f | , timeSlowCorrected + timeOffsets = %f\n, ratio of timeFastCp to timeSlowCp + timeOffsets = %f\n", i, timeFastCp[i], timeSlowCp[i] + timeOffsets[i], (timeFastCp[i]/(timeSlowCp[i] + timeOffsets[i])));
                     timeGlobal = timeFastCp[i];
                     alignedTimeFast = timeFastCp[i];
                     alignedEnergyFast = 0;
-                    alignedTimeSlow = timeSlowCorrectedCp[i];
+                    alignedTimeSlow = timeSlowCorrected[i];
                     alignedEnergySlow = energySlowCp[i];
                     //alignedTree1->Fill();
                 }
@@ -2233,6 +2715,8 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                     //printf("\nError: Both fast and slow times are zero for detector %d\n, Slow Energy = %f | , timeFastCp = %f | , timeSlowCorrected = %f\n", i, energySlowCp[i], timeFastCp[i], timeSlowCorrected[i]);
                     continue;
                 }
+                double ratio = alignedTimeFast/alignedTimeSlow;
+                if (ratio != 0) timefastslowratio_hists[i]->Fill(alignedTimeFast/alignedTimeSlow);
             }
 
             // Prepare the EntryData struct and fill it
@@ -2247,6 +2731,20 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
             entryDataVec.push_back(entryData);
         }
     }    
+
+    for (int i = 0; i < NumDetectors; i++) 
+    {
+        timefastslowratio_hists[i]->Write();
+
+        TCanvas * c7 = new TCanvas("c7", "TimeFastSlowRatio", 800, 600);
+        timefastslowratio_hists[i]->GetXaxis()->SetRangeUser(0, 2);
+        timefastslowratio_hists[i]->SetFillColor(kBlue);
+        timefastslowratio_hists[i]->GetXaxis()->SetTitle("Time fast /slow");
+        timefastslowratio_hists[i]->GetYaxis()->SetTitle("Counts (1/ns)");
+        timefastslowratio_hists[i]->Draw();
+        c7->SaveAs(Form("%s/R%s_time_fast_slow_ratio_L%d.root", dirPathplots.c_str(), run.c_str(), i));
+        delete c7;
+    }
 
     // Sort the entryDataVec based on timeGlobal in ascending order
     std::sort(entryDataVec.begin(), entryDataVec.end(), [](const EntryData& a, const EntryData& b) {return a.timeGlobal < b.timeGlobal;});
@@ -2271,7 +2769,6 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
         alignedEnergyFast = entryData.alignedEnergyFast;
         alignedTimeSlow = entryData.alignedTimeSlow;
         alignedEnergySlow = entryData.alignedEnergySlow;
-
         alignedTree1->Fill();
     }
 
@@ -2285,7 +2782,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     for (uint64_t entry = 0; entry < nEntries; entry++) 
     {
         alignedTree1->GetEntry(entry);
-        if (timeGlobal == 0 )continue;
+        if (timeGlobal <= 0 )continue;
         firstTime = timeGlobal;
         break;
     }
@@ -2299,6 +2796,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     }
     
     alignedTree1->Write();
+
 
     Double_t runLength = (lastTime - firstTime)*1e-9/60;
     printf("\n First entry timeGlobal = %f\n", firstTime);
