@@ -2747,12 +2747,12 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     }
 
     // Sort the entryDataVec based on timeGlobal in ascending order
-    std::sort(entryDataVec.begin(), entryDataVec.end(), [](const EntryData& a, const EntryData& b) {return a.timeGlobal < b.timeGlobal;});
+    std::sort(entryDataVec.begin(), entryDataVec.end(), [](const EntryData& a, const EntryData& b) {return a.alignedTimeFast < b.alignedTimeFast;});
 
     // Set the branches for the aligned data in the new copyTree
     TTree *alignedTree1 = new TTree("AlignedData", "AlignedData");
     alignedTree1->Branch("detectorID", &detectorID, "detectorID/I");
-    alignedTree1->Branch("globalTime", &timeGlobal, "globalTime/D");
+    //alignedTree1->Branch("globalTime", &timeGlobal, "globalTime/D");
     alignedTree1->Branch("timeF", &alignedTimeFast, "timeF/D");
     alignedTree1->Branch("energyF", &alignedEnergyFast, "energyF/D");
     alignedTree1->Branch("timeS", &alignedTimeSlow, "timeS/D");
@@ -2764,7 +2764,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     for (const EntryData& entryData : entryDataVec) 
     {
         detectorID = entryData.detectorID;
-        timeGlobal = entryData.timeGlobal;
+        //timeGlobal = entryData.timeGlobal;
         alignedTimeFast = entryData.alignedTimeFast;
         alignedEnergyFast = entryData.alignedEnergyFast;
         alignedTimeSlow = entryData.alignedTimeSlow;
@@ -2782,8 +2782,8 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     for (uint64_t entry = 0; entry < nEntries; entry++) 
     {
         alignedTree1->GetEntry(entry);
-        if (timeGlobal <= 0 )continue;
-        firstTime = timeGlobal;
+        if (alignedTimeFast <= 0 )continue;
+        firstTime = alignedTimeFast;
         break;
     }
    
@@ -2791,7 +2791,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
     for (uint64_t entry = lastEntry; entry >= 0; entry--) 
     {
         alignedTree1->GetEntry(entry);
-        lastTime = timeGlobal;
+        lastTime = alignedTimeFast;
         break;
     }
     
@@ -2799,9 +2799,9 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
 
 
     Double_t runLength = (lastTime - firstTime)*1e-9/60;
-    printf("\n First entry timeGlobal = %f\n", firstTime);
-    printf("\n Last entry timeGlobal = %f\n", lastTime);
-    printf("\nRun Length (According to timeGlobal variable. Used to check if it's in sequential time) = %f\n", runLength);
+    printf("\n First entry alignedTimeFast = %f\n", firstTime);
+    printf("\n Last entry alignedTimeFast = %f\n", lastTime);
+    printf("\nRun Length (According to alignedTimeFast variable. Used to check if it's in sequential time) = %f\n", runLength);
 
 }
 

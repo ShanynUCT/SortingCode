@@ -55,6 +55,7 @@ os.environ["NUMEXPR_MAX_THREADS"] = "16"
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
+pd.set_option('display.max_columns', None)
 #_______________________________________________________________________________________________
 # ________________  RELEVANT TRANSFORMATIONS FOR D1 FOR EACH RUN 28/02/2023 ____________________ 
 #_______________________________________________________________________________________________
@@ -148,6 +149,7 @@ def find_POLARIS_sync_pulses(mod_event_data, mod_event_data_df, data_dir):
     mod_sync_pulses = mod_event_data.loc[mod_event_data['scatters'] == 122]
     mod_sync_pulses.drop(['z', 'energy', 'time', 'detector'], inplace=True, axis=1)
     mod_sync_pulses.columns = ['sync_flag', 'sync_index', 'sync_timestamp']
+    mod_sync_pulses['sync_index'] = mod_sync_pulses['sync_index'] -1
     mod_sync_pulses.reset_index(drop=True, inplace=True)
     mod_sync_pulses['sync_timestamp'] = mod_sync_pulses['sync_timestamp']*10
     mod_sync_pulses['sync_energy'] = mod_event_data['energy'].iloc[mod_sync_pulses['sync_index'] + 1]
@@ -156,7 +158,7 @@ def find_POLARIS_sync_pulses(mod_event_data, mod_event_data_df, data_dir):
     print('\033[93m' +'____________  Sync Pulses POLARIS before selecting first valid index ____________ \n', mod_sync_pulses_df)
     #mod_sync_pulses_df.to_parquet(data_dir + 'syncPulsesPOLARIS.parquet')
 
-    firstValidSyncPOLARIS = mod_sync_pulses_df.loc[mod_sync_pulses_df['sync_energy'].first_valid_index()]['sync_index']
+    firstValidSyncPOLARIS = mod_sync_pulses_df.iloc[0]['sync_index']
     firstValidSyncPOLARIS_timestamp = mod_sync_pulses_df.loc[firstValidSyncPOLARIS - 1]['sync_timestamp']
     mod_sync_pulses_df = mod_sync_pulses_df.loc[mod_sync_pulses_df['sync_timestamp'] >= firstValidSyncPOLARIS_timestamp]
     mod_sync_pulses_df.reset_index(drop=True, inplace=True)
@@ -189,41 +191,37 @@ def read_LaBr_data(data_dir):
     LaBr_data = uproot.open(data_dir + LaBr_file)
     LaBr_tree = LaBr_data["dir_aligned/AlignedData"]
     detectorID = "detectorID"  
-    globalTime = "globalTime"
     timeF = "timeF"
     energyF = "energyF"
     timeS = "timeS"
     energyS = "energyS"
 
     detectorID = LaBr_tree[detectorID].array()
-    globalTime = LaBr_tree[globalTime].array()
     timeF = LaBr_tree[timeF].array()
     energyF = LaBr_tree[energyF].array()
     timeS = LaBr_tree[timeS].array()
     energyS = LaBr_tree[energyS].array()
     
 
-    LaBr_data_df = pd.DataFrame({'detectorID': detectorID, 'globalTime': globalTime, 'timeF': timeF, 'energyF': energyF, 'timeS': timeS, 'energyS': energyS})
+    LaBr_data_df = pd.DataFrame({'detectorID': detectorID, 'timeF': timeF, 'energyF': energyF, 'timeS': timeS, 'energyS': energyS})
     LaBr_data_df.reset_index(drop=True, inplace=True)
 
     # DROP detector 4 (RF)
     LaBr_data_df = LaBr_data_df.loc[LaBr_data_df['detectorID'] != 4]
     #drop negative times
     LaBr_data_df = LaBr_data_df.loc[LaBr_data_df['timeF'] > 0]
-    LaBr_data_df = LaBr_data_df.sort_values(by=['globalTime'], ascending=True)
+    LaBr_data_df = LaBr_data_df.sort_values(by=['timeF'], ascending=True)
     LaBr_data_df.reset_index(drop=True, inplace=True)
-    # take the time difference between the first non zero globalTime and the last non zero globalTime
+    # take the time difference between the first non zero timeF and the last non zero timeF
     first_time = LaBr_data_df.loc[LaBr_data_df['timeF'] != 0.0].iloc[0]['timeF']
     last_time = LaBr_data_df.loc[LaBr_data_df['timeF'] != 0.0].iloc[-1]['timeF']
 
     time_duration_labr = (last_time - first_time)*1e-9/60 
     # if the time difference is > 50 minutes, then the bool tensOfNanoseconds is True and we divide the times by 10
     if (time_duration_labr >= 50.0):
-        LaBr_data_df['globalTime'] = LaBr_data_df['globalTime']/10
         LaBr_data_df['timeF'] = LaBr_data_df['timeF']/10
         LaBr_data_df['timeS'] = LaBr_data_df['timeS']/10
     elif (time_duration_labr >= 500.0):
-        LaBr_data_df['globalTime'] = LaBr_data_df['globalTime']/100
         LaBr_data_df['timeF'] = LaBr_data_df['timeF']/100
         LaBr_data_df['timeS'] = LaBr_data_df['timeS']/100
     else:
@@ -232,10 +230,10 @@ def read_LaBr_data(data_dir):
 
     print('\nTime duration LaBr3 data: ', time_duration_labr, 'min\n')
 
-    min_globalTime = LaBr_data_df.loc[LaBr_data_df['globalTime'] != 0.0].min()['globalTime']
-    max_globalTime = LaBr_data_df['globalTime'].max()
+    min_timeF = LaBr_data_df.loc[LaBr_data_df['timeF'] != 0.0].min()['timeF']
+    max_timeF = LaBr_data_df['timeF'].max()
 
-    print('\n Max - Min duration gloal time LaBr3 ', (max_globalTime - min_globalTime)*1e-9/60, 'min\n')
+    print('\n Max - Min duration gloal time LaBr3 ', (max_timeF - min_timeF)*1e-9/60, 'min\n')
 
     print('\033[94m' +'____________ LaBr3:Ce df  ____________ \n', LaBr_data_df)
 
@@ -282,38 +280,41 @@ def find_LaBr3_sync_pulses(firstValidSyncPOLARIS,LaBr_data_df,mod_sync_pulses_df
     # plt.show()
 
     firstValidSyncPOLARIS = int(firstValidSyncPOLARIS)
-    sync_pulses_LaBr_df = sync_pulses_LaBr_df.iloc[(firstValidSyncPOLARIS-1):]# for instance index 3 is actually 2 etc
     excess_LaBr_sync_pulses = len(sync_pulses_LaBr_df)-len(mod_sync_pulses_df)  
+
+    sync_pulses_LaBr_df = sync_pulses_LaBr_df.iloc[(excess_LaBr_sync_pulses):]
+    first_sync_pulse_time = sync_pulses_LaBr_df['timeF'].iloc[0]
+    
     sync_pulses_LaBr_df = sync_pulses_LaBr_df.drop(['time_ratio', 'time_difference'], axis=1)
 
     print('\033[95m' +'____________ Time Duration of LaBr3 Sync Pulses____________\n', (sync_pulses_LaBr_df['timeF'].iloc[-1] - sync_pulses_LaBr_df['timeF'].iloc[0])*1e-9/60, "minutes")
     print('\033[95m' +'____________ Discrepancy Sync Pulses (LaBr3:Ce - POLARIS) ____________\n', excess_LaBr_sync_pulses)
 
-    # remove excess sync pulses from the end of the dataframe because the POLARIS continued to send pulses after DAQ had stopped and LaBr3 was still recording
+    """     # remove excess sync pulses from the end of the dataframe because the POLARIS continued to send pulses after DAQ had stopped and LaBr3 was still recording
     if (excess_LaBr_sync_pulses > 0):
         sync_pulses_LaBr_df = sync_pulses_LaBr_df.iloc[:-(excess_LaBr_sync_pulses)]
     else :
-        mod_sync_pulses_df = mod_sync_pulses_df.iloc[:-(abs(excess_LaBr_sync_pulses))]
+        mod_sync_pulses_df = mod_sync_pulses_df.iloc[:-(abs(excess_LaBr_sync_pulses))] """
     syncTimeDiff = sync_pulses_LaBr_df['timeF'].diff()
     sync_pulses_LaBr_df['syncTimeDiff'] = syncTimeDiff
     sync_pulses_LaBr_df['sync_flag'] = 122
     firstValidSyncLaBr = sync_pulses_LaBr_df['timeF'].iloc[0]
     
     print('\033[95m' +'____________ LaBr3:Ce sync pulses  ____________ \n', sync_pulses_LaBr_df)
-    # sync_pulses_LaBr_df has columns : 'detectorID', 'globalTime', 'timeF', 'energyF', 'timeS', 'energyS', 'syncTimeDiff', 'sync_flag'
+    # sync_pulses_LaBr_df has columns : 'detectorID', 'timeF', 'energyF', 'timeS', 'energyS', 'syncTimeDiff', 'sync_flag'
 
-    sync_pulses_LaBr_df = sync_pulses_LaBr_df[['detectorID', 'globalTime', 'timeF', 'energyF', 'timeS', 'energyS', 'sync_flag', 'syncTimeDiff']]
-    sync_pulses_LaBr_df = sync_pulses_LaBr_df.sort_values(by=['globalTime', 'timeF'], ascending=True)
+    sync_pulses_LaBr_df = sync_pulses_LaBr_df[['detectorID', 'timeF', 'energyF', 'timeS', 'energyS', 'sync_flag', 'syncTimeDiff']]
+    sync_pulses_LaBr_df = sync_pulses_LaBr_df.sort_values(by=['timeF'], ascending=True)
     sync_pulses_LaBr_df.reset_index(drop=True, inplace=True)
 
-    return sync_pulses_LaBr_df,firstValidSyncLaBr, mod_sync_pulses_df
+    return sync_pulses_LaBr_df,firstValidSyncLaBr, mod_sync_pulses_df, first_sync_pulse_time
     
-def time_walk_correction(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaBr_df,firstValidSyncLaBr,mod_sync_pulses_df):   
+def time_sync(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaBr_df,firstValidSyncLaBr,mod_sync_pulses_df, first_sync_pulse_time):   
     print('\033[96m' + '________________________________________') 
-    print('\033[96m' + '_________ TIME WALK CORRECTION _________')
+    print('\033[96m' + '_______________ TIME SYNC  _____________')
     print('\033[96m' + '________________________________________', '\n')  
 
-    # LaBr_data_df has columns: 'detectorID', 'globalTime', 'timeF', 'energyF', 'timeS', 'energyS'
+    # LaBr_data_df has columns: 'detectorID','timeF', 'energyF', 'timeS', 'energyS'
 
     # remove all detectorID == 5 (POLARIS) from LaBr3:Ce dataframe
     LaBr_data_df = LaBr_data_df.loc[LaBr_data_df['detectorID'] != 5]
@@ -321,10 +322,11 @@ def time_walk_correction(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaB
 
     LaBr_data_df.insert(0, 'sync_flag', 0)
     LaBr_data_df.insert(1, 'syncTimeDiff', 0) 
-    LaBr_data_df = LaBr_data_df[['detectorID', 'globalTime', 'timeF', 'energyF', 'timeS', 'energyS', 'sync_flag', 'syncTimeDiff']]
+    LaBr_data_df = LaBr_data_df[['detectorID', 'timeF', 'energyF', 'timeS', 'energyS', 'sync_flag', 'syncTimeDiff']]
+    
 
-    # sort by globalTime
-    LaBr_data_df = LaBr_data_df.sort_values(by=['globalTime', 'timeF'], ascending=True)
+    # sort by timeF
+    LaBr_data_df = LaBr_data_df.sort_values(by=['timeF'], ascending=True)
     LaBr_data_df.reset_index(drop = True, inplace = True)
     LaBr_data_df['timeDiffLaBr'] = LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'timeF'].diff()
 
@@ -335,13 +337,31 @@ def time_walk_correction(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaB
     LaBr_data_df = LaBr_data_df.drop(['timeS'], axis = 1)
     LaBr_data_df['timeDiffLaBr'] = LaBr_data_df['timeDiffLaBr'].fillna(0)    
 
+    ##### to compare to the time synced values, we need to know the time duration of the LaBr run after the sync pulse and until the end
+    # Find the index of the first_sync_pulse_time in the 'timeF' column
+    index_first_sync_pulse_time = LaBr_data_df.index[LaBr_data_df['timeF'] == first_sync_pulse_time].tolist()
+
+    # Check if the index was found and calculate the time difference
+    if index_first_sync_pulse_time:
+        index_first_sync_pulse_time = index_first_sync_pulse_time[0]
+        time_difference = LaBr_data_df['timeF'].iloc[-1] - LaBr_data_df['timeF'].iloc[index_first_sync_pulse_time + 1]
+        print("\033[93m" + "________ Time duration of DAQ running events__________:", time_difference*(1e-9/60))
+    else:
+        print("The first_sync_pulse_time value was not found in the 'timeF' column.")
+
     # sort by ALL TIME
-    LaBr_data_df.sort_values(by = ['globalTime', 'timeF'], inplace = True)
+    LaBr_data_df.sort_values(by = ['timeF'], inplace = True)
     LaBr_data_df['sync_flag'] = LaBr_data_df['sync_flag'].astype(int)
     LaBr_data_df = LaBr_data_df.loc[(LaBr_data_df['timeF'] >= sync_pulses_LaBr_df['timeF'].iloc[0]) & (LaBr_data_df['timeF'] <= sync_pulses_LaBr_df['timeF'].iloc[-1])]
     LaBr_data_df.reset_index(drop = True, inplace = True)
 
-    sync_pulses_LaBr_df = sync_pulses_LaBr_df.drop(['detectorID', 'globalTime', 'energyF', 'timeS', 'energyS', 'syncTimeDiff', 'sync_flag'], axis = 1)
+    sync_pulses_LaBr_df['syncTimeDiffDiff'] = 2000000060 - sync_pulses_LaBr_df['syncTimeDiff']
+
+    print('___Sync time diffdiff', sync_pulses_LaBr_df['syncTimeDiffDiff'])
+
+    mod_sync_pulses_df['sync_timestamp'] = mod_sync_pulses_df['sync_timestamp'] - sync_pulses_LaBr_df['syncTimeDiffDiff']
+
+    sync_pulses_LaBr_df = sync_pulses_LaBr_df.drop(['detectorID', 'energyF', 'timeS', 'energyS', 'syncTimeDiff', 'sync_flag'], axis = 1)
     sync_pulses_LaBr_df.reset_index(drop = True, inplace = True)    
 
     sync_pulses_LaBr_df = pd.concat([sync_pulses_LaBr_df['timeF'], mod_sync_pulses_df['sync_timestamp']], axis = 1)    
@@ -352,8 +372,8 @@ def time_walk_correction(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaB
     print('\033[96m' +'____________ LaBr3:Ce sync pulses  ____________ \n', sync_pulses_LaBr_df)
 
     LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'syncTimeDiff'] = np.nan
-    LaBr_data_df['syncTimeDiff'] = LaBr_data_df['syncTimeDiff'].fillna(method = 'bfill')
-    LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'timeF'] =  (LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'timeF']/LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'syncTimeDiff'])*2000000060 # divide the timeF by the syncTimeDiff and multiply by 2000000060 to get the timeF corrected for time walk
+    #LaBr_data_df['syncTimeDiff'] = LaBr_data_df['syncTimeDiff'].fillna(method = 'bfill')
+    #LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'timeF'] =  (LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'timeF']/LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'syncTimeDiff'])*2000000060 # divide the timeF by the syncTimeDiff and multiply by 2000000060 to get the timeF corrected for time walk
     
     index_list = sync_pulses_LaBr_df.index.tolist()
     len_index_list = len(index_list)
@@ -366,7 +386,7 @@ def time_walk_correction(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaB
             LaBr_data_df.loc[index_list[i]:, 'timeF'] = LaBr_data_df.loc[index_list[i], 'timeF'] + LaBr_data_df.loc[index_list[i]:, 'timeDiffLaBr'].cumsum()
     
     LaBr_data_df = LaBr_data_df.loc[(LaBr_data_df['sync_flag'] != 122) & (LaBr_data_df['detectorID'] != 5)]
-    LaBr_data_df.drop(['sync_flag', 'syncTimeDiff', 'timeDiffLaBr', 'globalTime'], axis = 1, inplace = True)
+    LaBr_data_df.drop(['sync_flag', 'syncTimeDiff', 'timeDiffLaBr'], axis = 1, inplace = True)
     LaBr_data_df['x'] = np.nan
     LaBr_data_df['y'] = np.nan
     LaBr_data_df['z'] = np.nan
@@ -378,7 +398,7 @@ def time_walk_correction(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaB
     last_time = LaBr_data_df.loc[LaBr_data_df['time'].notnull()].iloc[-1]['time']
     time_duration_labr = (last_time - first_time)*1e-9/60
     LaBr_data_df = LaBr_data_df[['detectorID', 'energy', 'time', 'x', 'y', 'z']]
-    print('\033[96m' +'____________ LaBr3:Ce df time walk corrected ____________ \n', LaBr_data_df)
+    print('\033[96m' +'____________ LaBr3:Ce df time sync corrected ____________ \n', LaBr_data_df)
     print('\033[96m' +'____________ LaBr3:Ce time duration ____________ \n', time_duration_labr, 'minutes')
     
     #LaBr_data_df has columns: 'detectorID', 'energy', 'time', 'x', 'y', 'z'
@@ -441,7 +461,7 @@ def time_diff_events(data_dir, LaBr_data_df,mod_event_data_df):
     plt.legend(loc = 'upper right', fontsize = 30)
     plt.tick_params(axis = 'both', which = 'major', labelsize = 20)
     plt.tick_params(axis = 'both', which = 'minor', labelsize = 20)
-    plt.show()
+    #plt.show()
 
     fig2 = plt.figure()
     plt.plot(slow_time_dff, label = 'LaBr$_{3}$ Slow Signal')
@@ -451,7 +471,7 @@ def time_diff_events(data_dir, LaBr_data_df,mod_event_data_df):
     plt.legend(loc = 'upper right', fontsize = 30)
     plt.tick_params(axis = 'both', which = 'major', labelsize = 20)
     plt.tick_params(axis = 'both', which = 'minor', labelsize = 20)
-    plt.show()
+    #plt.show()
 
     fig3 = plt.figure()
     plt.plot(fast_time_dff, label = 'LaBr$_{3}$ Fast Signal')
@@ -461,7 +481,7 @@ def time_diff_events(data_dir, LaBr_data_df,mod_event_data_df):
     plt.legend(loc = 'upper right', fontsize = 30)
     plt.tick_params(axis = 'both', which = 'major', labelsize = 20)
     plt.tick_params(axis = 'both', which = 'minor', labelsize = 20)
-    plt.show()
+    #plt.show()
 
 def doubles(df_final):
 
@@ -512,11 +532,11 @@ def main():
 
     mod_event_data_df = apply_coordinate_transformations(run_num, mod_event_data_df)
     mod_sync_pulses_df,firstValidSyncPOLARIS,mod_event_data_df = find_POLARIS_sync_pulses(mod_event_data,mod_event_data_df, data_dir)
-    sync_pulses_LaBr_df,firstValidSyncLaBr, mod_sync_pulses_df = find_LaBr3_sync_pulses(firstValidSyncPOLARIS,LaBr_data_df,mod_sync_pulses_df)
+    sync_pulses_LaBr_df,firstValidSyncLaBr, mod_sync_pulses_df,first_sync_pulse_time = find_LaBr3_sync_pulses(firstValidSyncPOLARIS,LaBr_data_df,mod_sync_pulses_df)
     time_diff_events(data_dir, LaBr_data_df,mod_event_data_df)
-    LaBr_data_df = time_walk_correction(data_dir, mod_event_data_df, LaBr_data_df, sync_pulses_LaBr_df,firstValidSyncLaBr,mod_sync_pulses_df)
+    LaBr_data_df = time_sync(data_dir, mod_event_data_df, LaBr_data_df, sync_pulses_LaBr_df,firstValidSyncLaBr,mod_sync_pulses_df,first_sync_pulse_time)
     df_final = merge_two_detector_dataframes(data_dir,mod_event_data_df,LaBr_data_df,run_num)
-    #doubles(df_final)
+    doubles(df_final)
 
     end = time.time()
 
