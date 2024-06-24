@@ -2129,6 +2129,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                     timeOffsetBeforeCorrection[i] = static_cast<Double_t>(static_cast<int>(deltaTime));
                     // printf("Detector %d: deltaTime = %f\n", i, deltaTime);
                     
+                    if (nextEnergySlow == 0) continue;
                     slowfasttimediff_hists[i]->Fill(deltaTime);
                     slowfasttimediff_energy_hists[i]->Fill(deltaTime, energy);
                     energy_slowfasttimediff_hists[i]->Fill(energy, deltaTime);
@@ -2637,6 +2638,7 @@ void align_offset(std::string run,TFile *outputFile, std::string dirPathplots, T
                 deltaTime = (nextTimeSlow - refTimeFast);
                 if (deltaTime > 1000.0) break; // Stop searching if time difference exceeds 1 microsecond
                 //printf("\nDetector %d: Corrected Time Offset = %f\n", i, deltaTime);
+                if (nextEnergySlow == 0) continue;
                 timeOffsetCorrectedHists[i]->Fill(deltaTime);
                 timeEnergyOffsetCorrectedHists[i]->Fill(deltaTime, nextEnergySlow);
                 break;

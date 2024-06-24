@@ -158,8 +158,8 @@ def find_POLARIS_sync_pulses(mod_event_data, mod_event_data_df, data_dir):
     print('\033[93m' +'____________  Sync Pulses POLARIS before selecting first valid index ____________ \n', mod_sync_pulses_df)
     #mod_sync_pulses_df.to_parquet(data_dir + 'syncPulsesPOLARIS.parquet')
 
-    firstValidSyncPOLARIS = mod_sync_pulses_df.iloc[0]['sync_index']
-    firstValidSyncPOLARIS_timestamp = mod_sync_pulses_df.loc[firstValidSyncPOLARIS - 1]['sync_timestamp']
+    firstValidSyncPOLARIS = mod_sync_pulses_df.loc[mod_sync_pulses_df['sync_energy'].first_valid_index()]['sync_index']
+    firstValidSyncPOLARIS_timestamp = mod_sync_pulses_df.loc[firstValidSyncPOLARIS-1]['sync_timestamp']
     mod_sync_pulses_df = mod_sync_pulses_df.loc[mod_sync_pulses_df['sync_timestamp'] >= firstValidSyncPOLARIS_timestamp]
     mod_sync_pulses_df.reset_index(drop=True, inplace=True)
     #print('\033[93m' +'____________  Sync Pulses POLARIS  ____________ \n', mod_sync_pulses_df)
@@ -177,6 +177,9 @@ def find_POLARIS_sync_pulses(mod_event_data, mod_event_data_df, data_dir):
 
     mod_event_data_df = mod_event_data_df.loc[mod_event_data_df['time'] >= firstValidSyncPOLARIS_timestamp]
     mod_event_data_df.reset_index(drop=True, inplace=True)
+
+    print('\033[93m' +'____________  Sync Pulses POLARIS after selecting first valid index ____________ \n', mod_sync_pulses_df)
+
 
     print('\033[93m' +'____________ POLARIS df  ____________ \n', mod_event_data_df)
     return mod_sync_pulses_df,firstValidSyncPOLARIS,mod_event_data_df
@@ -358,8 +361,11 @@ def time_sync(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaBr_df,firstV
     sync_pulses_LaBr_df['syncTimeDiffDiff'] = 2000000060 - sync_pulses_LaBr_df['syncTimeDiff']
 
     print('___Sync time diffdiff', sync_pulses_LaBr_df['syncTimeDiffDiff'])
+    print ('\n\nmod_sync_pulses_df[sync_timestamp]', mod_sync_pulses_df['sync_timestamp'])
 
-    mod_sync_pulses_df['sync_timestamp'] = mod_sync_pulses_df['sync_timestamp'] - sync_pulses_LaBr_df['syncTimeDiffDiff']
+
+    mod_sync_pulses_df['sync_timestamp'] = mod_sync_pulses_df['sync_timestamp'] - sync_pulses_LaBr_df['syncTimeDiffDiff'].fillna(0)
+
 
     sync_pulses_LaBr_df = sync_pulses_LaBr_df.drop(['detectorID', 'energyF', 'timeS', 'energyS', 'syncTimeDiff', 'sync_flag'], axis = 1)
     sync_pulses_LaBr_df.reset_index(drop = True, inplace = True)    
@@ -369,7 +375,7 @@ def time_sync(data_dir,mod_event_data_df,LaBr_data_df,sync_pulses_LaBr_df,firstV
     sync_pulses_LaBr_df['index'] = LaBr_data_df[LaBr_data_df['sync_flag'] == 122].index 
     sync_pulses_LaBr_df.set_index('index', inplace=True)
 
-    print('\033[96m' +'____________ LaBr3:Ce sync pulses  ____________ \n', sync_pulses_LaBr_df)
+    print('\033[96m' +'____________ Both sync pulses  ____________ \n', sync_pulses_LaBr_df)
 
     LaBr_data_df.loc[(LaBr_data_df['sync_flag'] == 0),'syncTimeDiff'] = np.nan
     #LaBr_data_df['syncTimeDiff'] = LaBr_data_df['syncTimeDiff'].fillna(method = 'bfill')
@@ -427,6 +433,9 @@ def merge_two_detector_dataframes(data_dir,mod_event_data_df,LaBr_data_df,run_nu
 
     # save the final dataframe to a parquet file
     df_final.to_parquet(data_dir + 'run' + str(run_num) + '_mergedLaBrPOLARISdata.parquet')
+    # Save the final dataframe to a TSV file
+    df_final.to_csv(data_dir + 'run' + str(run_num) + '_mergedLaBrPOLARISdata.txt', sep='\t', index=False)
+
 
     
     # ______________________________
@@ -519,9 +528,6 @@ def doubles(df_final):
     plt.title('LaBr3:Ce Energy vs POLARIS Energy (2D Histogram)')
     plt.show()
 
-
-
-
     
 # ______________________________________________________________________________________________________________________
 def main():
@@ -536,12 +542,12 @@ def main():
     time_diff_events(data_dir, LaBr_data_df,mod_event_data_df)
     LaBr_data_df = time_sync(data_dir, mod_event_data_df, LaBr_data_df, sync_pulses_LaBr_df,firstValidSyncLaBr,mod_sync_pulses_df,first_sync_pulse_time)
     df_final = merge_two_detector_dataframes(data_dir,mod_event_data_df,LaBr_data_df,run_num)
-    doubles(df_final)
+    #doubles(df_final)
 
     end = time.time()
 
     print('\033[92m' + '________________________________________')
-    print('\033[92m' + 'Run time: ', (end - start)/60, 'minutes')
+    print('\033[92m' + 'Run time of program: ', (end - start)/60, 'minutes')
 
 if __name__ == '__main__':
     main()
