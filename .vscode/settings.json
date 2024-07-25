@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.tex": "tex",
+        "sort2labr_CCData.C": "cpp"
+    }
+}
