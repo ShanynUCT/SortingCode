@@ -12,8 +12,8 @@
 /* This code reads in the list mode data from the buffer. It sorts the time and (calibrated) energy for each detector into a tree. */
 
 /*   COMPILE & RUN: 
-     clear && g++ -std=c++0x -O3 sort1labr.C -o exe1 `root-config --cflags --libs` -lSpectrum 
-     ./exe1 ~/Documents/PhD/exp/2022/220615/analysis/angle/water/run27/R63
+     clear && g++ -std=c++0x -O3 sort1labr_timingshapingjune2024.C -o exe1timingshaping `root-config --cflags --libs` -lSpectrum 
+     ./exe1timingshaping ~/Users/shanyn/Documents/PhD/Exp/2024/timing_shaping_characterisation_june2024/CC_polaris_2inch/run8/R8
 */
 #include <stdio.h>
 #include <fcntl.h>
@@ -101,24 +101,23 @@ int main (int argc, char** argv)
   double tdF, tdSF0, tdSF1;
   int Ed;
 
-  //Energy calibrations 2nd order polynomials (APPLIED) # 15062022 Data
-    //   std::vector<double> a2 = {0.00000288786796, 0.00000351711116, 0.00000160595876, 0.00000300000230};
-    //   std::vector<double> b2 = {0.747696355, 0.805816609, 0.513776183, 0.709359122};
-    //   std::vector<double> c2 = {1.64893477, 1.09470037, 1.37154046, 2.18122723};
+    //Energy calibrations 2nd order polynomials (APPLIED) # timing_shaping_characterisation_june_2024 Data (L0 has 152Eu and 137Cs and 60Co peaks 2nd order, L2 has 152Eu 2nd order)
+    std::vector<double> a2slow = {3.82160000E-07, 5.0248710E-07};
+    std::vector<double> b2slow = {2.80362000E-01, 2.7453690E-01};
+    std::vector<double> c2slow = {3.73025000E-01, 9.07E-01};
 
-  //Energy calibrations 2nd order polynomials (APPLIED) # 28022023 Data
-    /* std::vector<double> a2 = {0.00001942, 0.00010155, 0.00003208, 0.00002200};
-    std::vector<double> b2 = {1.81799962, 2.61697133, 2.21345098, 2.05179483};
-    std::vector<double> c2 = {-1.65129151, -0.54900373, -4.86476637, -0.97991876}; */
+    std::vector<double> a2fast = {1.56438000E-06, 2.19003000E-07};
+    std::vector<double> b2fast = {2.69853000E-01, 1.90136900E-01};
+    std::vector<double> c2fast = {1.09687000E+01, 0.00000000E+00};
 
-    //Energy calibrations 2nd order polynomials (APPLIED) # timing_shaping_characterisation_june_2024 Data
-    std::vector<double> a2slow = {7.34444200E-07, 4.1046890E-07};
-    std::vector<double> b2slow = {2.80468500E-01, 2.7537890E-01};
+    //Energy calibrations 2nd order polynomials (APPLIED) # timing_shaping_characterisation_june_2024 Data (L0 has 22Na peaks linear fit, L2 has 152Eu 2nd order)
+    /* std::vector<double> a2slow = {0, 4.1046890E-07};
+    std::vector<double> b2slow = {2.76500000E-01, 2.7537890E-01};
     std::vector<double> c2slow = {0.00000000E+00, 0.00000000E+00};
 
-    std::vector<double> a2fast = {3.47720100E-07, 2.19003000E-07};
-    std::vector<double> b2fast = {1.81586700E-01, 1.90136900E-01};
-    std::vector<double> c2fast = {0.00000000E+00, 0.00000000E+00};
+    std::vector<double> a2fast = {0, 2.19003000E-07};
+    std::vector<double> b2fast = {1.85123000E-01, 1.90136900E-01};
+    std::vector<double> c2fast = {0.00000000E+00, 0.00000000E+00}; */
 
   double bw = 1, energycalib, rndchannel, rndUnif;
   TRandom3* randy = new TRandom3();
@@ -264,38 +263,16 @@ int main (int argc, char** argv)
                     */
 
                     // Identify detector and store data accordingly
-                    if ((ident > 63) && (ident < 68)) 
+                    if ((ident > 63) && (ident < 66)) 
                     {
                         detectorID = ident-64;
                         energycalib = 0;
-                        rndUnif = randy->Uniform(-2, 2);
-                        rndchannel = adcdata;
-                        energycalib = (a2[detectorID]*(rndchannel*rndchannel))+(b2[detectorID]*rndchannel)+(c2[detectorID]);
-                        if (energycalibS[detectorID].size() == 0)
-                        {
-                            energycalibS[detectorID].push_back(energycalib);
-                        }
-                        if (energyS[detectorID].size() == 0)
-                        {
-                            energyS[detectorID].push_back(adcdata);
-                        }
-
-                        // int tick, tock;
-                        // double sick;
-                        // tock = ((adcdata & 0x0000e000) >> 13);
-                        // tick = (adcdata & 0x00001fff);
-                        // sick = (tick/8192.0) * 20.0; 
-                        // if (tock != 7)
-                        // {
-                        //     if (timeS[detectorID].size() == 0) 
-                        //     {
-                        //         timeS[detectorID].push_back((TS * 100.0) + (tock * 20.0) + sick); // time in 1e12s which is 10ns
-                        //         // printf("timeS[%d] = %f\n", detectorID, timeS[detectorID][0]);
-                        //     }
-                        // }
-
+                        rndUnif = randy->Uniform(-3.5, 3.5);
+                        energycalib = (a2slow[detectorID]*(adcdata*adcdata))+(b2slow[detectorID]*adcdata)+(c2slow[detectorID]);
+                        if (energycalibS[detectorID].size() == 0) energycalibS[detectorID].push_back(energycalib + rndUnif);
+                        if (energyS[detectorID].size() == 0) energyS[detectorID].push_back(adcdata);
                     }
-                    else if ((ident >79) && (ident < 84)) 
+                    else if ((ident >79) && (ident < 82)) 
                     {
                         detectorID = ident-80;
                         int tick, tock;
@@ -305,39 +282,19 @@ int main (int argc, char** argv)
                         sick = (tick/8192.0) * 20.0; 
                         // if (tock != 7) // The time slow doesnt have the tock information -> there is no fractonal range in the byte information between 0 and 7 for the 2ns sampling speed interval. Uncommenting this gives very low statistics.
                         {
-                            if (timeS[detectorID].size() == 0) 
-                            {
-                                timeS[detectorID].push_back((TS * 100.0) + (tock * 20.0) + sick); // time in 1e12s which is 10ns
-                                // printf("timeS[%d] = %f\n", detectorID, timeS[detectorID][0]);
-                            }
+                            if (timeS[detectorID].size() == 0)  timeS[detectorID].push_back((TS * 100.0) + (tock * 20.0) + sick); // time in 1e12s which is 10ns
                         }
                     }
-                    else if ((ident > 71) && (ident < 76)) 
+                    else if ((ident > 71) && (ident < 74)) 
                     {
                         detectorID = ident-72;
-                        // energycalib = 0;
-                        rndUnif = randy->Uniform(-2, 2);
-                        // rndchannel = adcdata+rndUnif; 
-                        // energycalib = (a2[detectorID]*(rndchannel*rndchannel))+(b2[detectorID]*rndchannel)+(c2[detectorID]);
-                        if (energyF[detectorID].size() == 0)
-                        {
-                            energyF[detectorID].push_back(adcdata);
-                        }
-
-                        // tock = ((adcdata & 0x0000e000) >> 13); // 500 MHz sampling speed (2 ns) bits 13-15
-                        // tick = (adcdata & 0x00001fff); // 500 MHz sampling speed. Time difference between 2ns samples bits 0-12. 0 is start of tick, 8191 is start of next tick (2,4,6,8)
-                        // sick = (tick/8192.0) * 20.0; // between the 2 ns samples
-                        // if (tock != 7)
-                        // {
-                        //     if (timeF[detectorID].size() == 0)
-                        //     {
-                        //         timeF[detectorID].push_back((TS * 100.0) + (tock * 20.0) + sick);
-                        //         //printf("timeF[%d] = %f\n", detectorID, timeF[detectorID][0]);
-                        //     }
-                        // }
-
+                        energycalib = 0;
+                        rndUnif = randy->Uniform(-5.2, 5.2);
+                        energycalib = (a2fast[detectorID]*(adcdata*adcdata))+(b2fast[detectorID]*adcdata)+(c2fast[detectorID]);
+                        if (energyF[detectorID].size() == 0) energyF[detectorID].push_back(energycalib+rndUnif);
+                        //if (energyF[detectorID].size() == 0) energyF[detectorID].push_back(adcdata);
                     } 
-                    else if ((ident > 87) && (ident < 92)) 
+                    else if ((ident > 87) && (ident < 90)) 
                     {
                         detectorID = ident-88;
                         int tick, tock;
@@ -350,7 +307,6 @@ int main (int argc, char** argv)
                             if (timeF[detectorID].size() == 0)
                             {
                                 timeF[detectorID].push_back((TS * 100.0) + (tock * 20.0) + sick);
-                                // printf("timeF[%d] = %f\n", detectorID, timeF[detectorID][0]);
                             }
                         }
                     }
