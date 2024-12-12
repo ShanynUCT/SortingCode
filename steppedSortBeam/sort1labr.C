@@ -153,6 +153,10 @@ int main (int argc, char** argv)
   TH1D** fastTD4=new TH1D*[5];
   TH1D** fastTD0=new TH1D*[5];
   TH1F** eventCounts = new TH1F*[5];
+  TH2D** fastenergyTD4=new TH2D*[5];
+  TH1D** insync=new TH1D*[5];
+  TH1D** outsync =new TH1D*[5];
+  TH1D** prompt=new TH1D*[5];
 
   for (j = 0; j <=4; j++)
   {
@@ -160,6 +164,10 @@ int main (int argc, char** argv)
     fastTD4[j] = new TH1D(TString::Format("Fast Time Difference_RF-L%2d", j),"Spectrum",2000,-1000,1000);
     fastTD0[j] = new TH1D(TString::Format("Fast Time Difference_L0-L%2d", j),"Spectrum",2000,-1000,1000);
     eventCounts[j] = new TH1F(TString::Format("Event Counts L%2d", j), "Event Counts", 3, 0.5, 3.5);
+    fastenergyTD4[j] = new TH2D(TString::Format("Slow Energy vs Time Difference_RF-L%2d", j),"Spectrum",10000,0,10000, 8000, 0, 8000);
+    insync[j] = new TH1D(TString::Format("In Sync L%2d", j),"Spectrum",8000,0,8000);
+    outsync[j] = new TH1D(TString::Format("Out Sync L%2d", j),"Spectrum",8000,0,8000);
+    prompt[j] = new TH1D(TString::Format("Prompt L%2d", j),"Spectrum",8000,0,8000);
   }
 
   // ################ Start of data analysis ####################
@@ -297,13 +305,12 @@ int main (int argc, char** argv)
                     }
 
 
-                    if (TSdiff >= 1 )                     
+                    if (TSdiff >= 60 )                    
                     {   
                         i=i-2; 
                         //std::cout <<"LOOP2 " << "i" << i << "| TSdiff " << TSdiff << "| TS " << TS << "| TSinit " << TSinit << std::endl;
                         for (j = 0; j <=4; j++)
                         {
-                            //printf("j %d | energyS[j].size() %lu | timeF[j].size() %lu | timeS[j].size() %lu \n", j, energyS[j].size(), timeF[j].size(), timeS[j].size());
                             //if the size of avector is 0, fill the value with 0
                             if (slowECalibL[j].size() == 0) slowECalibL[j].push_back(0);
                             if (timeF[j].size() == 0) timeF[j].push_back(0);
@@ -316,10 +323,14 @@ int main (int argc, char** argv)
                         fastEnergyPOLARIS[0] = fastEPOLARIS[0];
                         fastTimePOLARIS[0] = fastTPOLARIS[0]/10;
 
+                        //if ((timeFast[0]!= 0)&& (timeFast[4]!= 0)&& (energySlow[0]!= 0))
+                        //{std::cout << "timeFast[0] " << timeFast[0] << " timeFast[4] " << timeFast[4] << " energySlow[0] " << energySlow[0] << std::endl;}
+                        //{std::cout << "timeFast[1] " << timeFast[1] << " timeFast[4] " << timeFast[4] << " energySlow[0] " << energySlow[1] << std::endl;}
+
 
                         LaBrData->Fill();
 
-                        for (j = 0; j <4; j++)
+                        /* for (j = 0; j <4; j++)
                         {
                             if (energySlow[j] >= 1000)
                             {
@@ -335,7 +346,7 @@ int main (int argc, char** argv)
                                 eventCounts[j]->GetXaxis()->SetBinLabel(2,"Only Slow");
                                 eventCounts[j]->GetXaxis()->SetBinLabel(3,"Coinc Fast+Slow");
                             }                        
-                        }
+                        } */
 
                         for (j = 0; j <= 3; j++) 
                         { 
@@ -350,8 +361,19 @@ int main (int argc, char** argv)
                             {
                                 if (j != k ) 
                                 {
-                                    tdF=(timeFast[j]-timeFast[k]); // Measured in 1e13s which is 100ns
-                                    if (j == 4) fastTD4[k]->Fill(tdF);
+                                    tdF=(timeFast[k]-timeFast[j]); // Measured in 1e13s which is 100ns
+                                    if (j == 4) 
+                                    {
+                                        fastTD4[k]->Fill(tdF);
+                                        fastenergyTD4[k]->Fill(tdF, energySlow[k]);
+                                        if ((tdF>=56 && tdF<=70)|| (tdF>=360 && tdF<=375) || (tdF>=668 && tdF<=682)) {insync[k]->Fill(energySlow[k]);
+                                        //printf("tdF %f\n", tdF);
+                                        }
+                                        else if ((tdF>=1 && tdF<=55) || (tdF>=72 && tdF<=358) || (tdF>=377 && tdF<=666)) {outsync[k]->Fill(energySlow[k]);}
+                                        
+
+
+                                    }
                                     if (j == 0) fastTD0[k]->Fill(tdF);
 
                                 }
@@ -425,12 +447,55 @@ int main (int argc, char** argv)
 
     for (j = 0; j <=4; j++)
     {
+        prompt[j]->Add(insync[j], outsync[j], 1, -1);
+    }
+
+    for (j = 0; j <=4; j++)
+    {
         slowE[j]->Write();
         fastTD4[j]->Write();
+        fastenergyTD4[j]->Write();
         fastTD0[j]->Write();
         eventCounts[j]->Write();
+        prompt[j]->Write();
+        insync[j]->Write();
+        outsync[j]->Write();
     }
     
+    // save the insync and outsync histograms and prompt to a canvas
+    TCanvas *c1 = new TCanvas("c1", "c1", 800, 800);
+    insync[0]->SetLineColor(kRed);
+    insync[0]->Draw();
+    outsync[0]->SetLineColor(kBlue);
+    outsync[0]->Draw("same");
+    prompt[0]->SetLineColor(kBlack);
+    prompt[0]->Draw("same");
+
+    // save the canvas to a file
+    c1->SaveAs("insync_outsync_prompt0.root");
+
+    TCanvas *c4 = new TCanvas("c4", "c4", 800, 800);
+    insync[1]->SetLineColor(kRed);
+    insync[1]->Draw();
+    outsync[1]->SetLineColor(kBlue);
+    outsync[1]->Draw("same");
+    prompt[1]->SetLineColor(kBlack);
+    prompt[1]->Draw("same");
+
+    // save the canvas to a file
+    c4->SaveAs("insync_outsync_prompt1.root");
+
+    TCanvas *c3 = new TCanvas("c3", "c3", 800, 800);
+    insync[2]->SetLineColor(kRed);
+    insync[2]->Draw();
+    outsync[2]->SetLineColor(kBlue);
+    outsync[2]->Draw("same");
+    prompt[2]->SetLineColor(kBlack);
+    prompt[2]->Draw("same");
+
+    // save the canvas to a file
+    c3->SaveAs("insync_outsync_prompt2.root");
+
     // Calculating total time taken by the program.
     double TimeDiff = (double) (TS - TSfirst)*(1e-8)/60.0;
     printf("The first time stamp is (e-8 s): %" PRIu64 "\n", TSfirst);

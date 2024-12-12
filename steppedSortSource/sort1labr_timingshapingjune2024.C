@@ -196,12 +196,12 @@ int main (int argc, char** argv)
         while (!feof(f))
         {
             //Read a whole block of data in (64kbytes)
-        no_read = fread(buffer, sizeof(buffer[0]), SIZE, f);
-        blocks_in++;
-        
-        if ( (feof(f)) && no_read <= 0 ) goto end;
+            no_read = fread(buffer, sizeof(buffer[0]), SIZE, f);
+            blocks_in++;
+            
+            if ( (feof(f)) && no_read <= 0 ) goto end;
 
-        pos+=24;
+            pos+=24;
 
             for (i=6; i< SIZE; i+=2)
             {
@@ -498,6 +498,19 @@ int main (int argc, char** argv)
         slowfastTDSE[j]->Write();
         slowfastTDFE[j]->Write();
     }
+
+    std::string inputfile = argv[1];
+    std::string delimiter = "/";
+    std::string directory = inputfile.substr(0, inputfile.find_last_of(delimiter));
+    std::string filename = inputfile.substr(inputfile.find_last_of(delimiter) + 1);
+
+    std::ofstream uncalibrated;
+    uncalibrated.open(directory + "/"+filename+"_histcalib.asc");
+    for (int i = 0; i < 17000; i++)
+    {
+        uncalibrated << i << "," << slowcalibE[0]->GetBinContent(i) << std::endl;
+    }
+    uncalibrated.close();
     
     // Calculating total time taken by the program.
     double TimeDiff = (double) (TS - TSfirst)*(1e-8)/60.0;
