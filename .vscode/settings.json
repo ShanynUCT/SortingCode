@@ -72,6 +72,13 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "thread": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "sort1labr_13082024.C": "cpp",
+        "sort2labr_2022CoolDownRuns.C": "cpp",
+        "chrono": "cpp",
+        "labrsort5_v1.C": "cpp",
+        "labrsort5_v3.C": "cpp",
+        "format": "cpp",
+        "stop_token": "cpp"
     }
 }
